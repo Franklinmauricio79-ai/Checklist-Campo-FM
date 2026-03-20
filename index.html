@@ -1,29 +1,414 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Entrenamiento Gas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspección de Válvulas y Alineación</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#0073B4;--primary-dark:#093C71;--success:#78B450;--danger:#D91F1F;--gray:#7F8082;--gray-light:#B8C2CD;--bg-alt:#F3F1F1;--bg-surface:#FFFFFF;--sky:#58B2E7;--purple:#95358D;--orange:#ED7602;--yellow:#F9D100;--font-main:'DM Sans','Segoe UI',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;--radius:12px;--shadow:0 4px 24px rgba(9,60,113,0.10);--shadow-lg:0 8px 40px rgba(9,60,113,0.15);--gradient-header:linear-gradient(135deg,#093C71 0%,#0073B4 60%,#58B2E7 100%);--gradient-success:linear-gradient(90deg,#78B450,#58B2E7);--transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+body{font-family:var(--font-main);background:#F0F2F5;color:#1a1a2e;min-height:100vh}
+.header{position:sticky;top:0;z-index:100;background:var(--gradient-header);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(9,60,113,0.25)}
+.header-left{display:flex;align-items:center;gap:14px}
+.avatar{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;font-size:16px;color:#fff;border:2px solid rgba(255,255,255,0.3);text-transform:uppercase}
+.header-title{font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.header-subtitle{font-size:12px;color:rgba(255,255,255,0.75);font-weight:500}
+.header-right{display:flex;align-items:center;gap:12px}
+.badge-online{background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;font-size:12px;color:#fff;font-weight:500;display:flex;align-items:center;gap:6px}
+.badge-online .dot{width:8px;height:8px;border-radius:50%;background:#78B450;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+.btn-change-name{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:11px;padding:5px 12px;border-radius:16px;cursor:pointer;font-family:var(--font-main);font-weight:500;transition:var(--transition)}
+.btn-change-name:hover{background:rgba(255,255,255,0.25)}
+.offline-indicator{display:none;background:var(--danger);color:#fff;text-align:center;padding:6px;font-size:12px;font-weight:600}
+.offline-indicator.show{display:block}
+/* TABS CENTRADOS */
+.tabs-container{display:flex;gap:0;background:#fff;border-bottom:2px solid #E8ECF0;padding:0 24px;position:sticky;top:76px;z-index:90;overflow-x:auto;justify-content:center}
+.tab-btn{flex-shrink:0;padding:14px 20px;background:none;border:none;border-bottom:3px solid transparent;font-family:var(--font-main);font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;transition:var(--transition);text-align:center;white-space:nowrap}
+.tab-btn:hover{color:var(--primary)}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(0,115,180,0.04)}
+.main-content{max-width:1200px;margin:0 auto;padding:24px}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.progress-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:20px}
+.progress-info{font-size:14px;font-weight:600;color:var(--primary-dark);white-space:nowrap;min-width:180px}
+.progress-info span{font-family:var(--font-mono);font-weight:700;color:var(--primary)}
+.progress-bar-wrap{flex:1;height:12px;background:#E8ECF0;border-radius:8px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--gradient-success);border-radius:8px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);width:0%}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.filter-group{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid #D5DAE0}
+.filter-btn{padding:8px 18px;font-family:var(--font-main);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:var(--transition);background:#fff;color:var(--gray)}
+.filter-btn.active{background:var(--primary);color:#fff}
+.filter-btn:hover:not(.active){background:#F0F5FA}
+.export-group{display:flex;gap:8px}
+.btn-export{padding:8px 16px;border-radius:8px;border:1px solid #D5DAE0;background:#F7F8FA;font-family:var(--font-main);font-size:12px;font-weight:500;cursor:pointer;transition:var(--transition);color:#666;display:flex;align-items:center;gap:6px}
+.btn-export:hover{background:#EBEDF0;border-color:#C0C5CC;color:#444}
+.section-header{display:flex;align-items:center;gap:12px;margin:24px 0 0 0;padding:12px 18px;background:linear-gradient(90deg,rgba(0,115,180,0.08),rgba(88,178,231,0.04));border-radius:var(--radius) var(--radius) 0 0;border-left:4px solid var(--primary);cursor:pointer;user-select:none;transition:var(--transition)}
+.section-header:hover{background:linear-gradient(90deg,rgba(0,115,180,0.12),rgba(88,178,231,0.06))}
+.section-header.collapsed{border-radius:var(--radius);margin-bottom:8px}
+.section-number{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-family:var(--font-mono);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-title{font-size:15px;font-weight:700;color:var(--primary-dark);text-transform:uppercase;letter-spacing:0.5px;flex:1}
+.section-chevron{font-size:18px;color:var(--primary);transition:transform 0.3s ease;font-weight:700}
+.section-header.collapsed .section-chevron{transform:rotate(-90deg)}
+.section-body{overflow:hidden;transition:max-height 0.4s ease,opacity 0.3s ease;max-height:8000px;opacity:1}
+.section-body.collapsed{max-height:0;opacity:0}
+.table-wrapper{overflow-x:auto;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);background:var(--bg-surface);margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:#EDF1F5;color:var(--primary-dark);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;padding:12px 10px;text-align:left;border-bottom:2px solid #D5DAE0;white-space:nowrap}
+tbody tr{transition:var(--transition);border-left:3px solid transparent}
+tbody tr:hover{background:rgba(0,115,180,0.03)}
+tbody tr.completed{border-left:3px solid var(--success);background:rgba(120,180,80,0.04)}
+tbody tr.row-closed{border-left:3px solid var(--success);background:rgba(120,180,80,0.04)}
+tbody td{padding:10px 10px;border-bottom:1px solid #EDF1F5;vertical-align:middle}
+td .item-number{font-family:var(--font-mono);font-weight:600;color:var(--primary);font-size:13px}
+td textarea{width:100%;min-width:120px;padding:8px 10px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;resize:vertical;min-height:36px;transition:var(--transition);background:#FAFBFC}
+td textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,115,180,0.12);background:#fff}
+td textarea:disabled{background:#F5F6F8;color:var(--gray);border-color:#E8ECF0}
+td input[type="checkbox"]{width:20px;height:20px;accent-color:var(--success);cursor:pointer}
+td input[type="checkbox"]:disabled{cursor:default;opacity:0.6}
+td .tech-name{font-weight:600;color:var(--primary-dark);font-size:12px}
+td .time-stamp{font-family:var(--font-mono);font-size:11px;color:var(--gray);font-weight:500}
+td select.cumple-select{padding:6px 10px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:600;background:#FAFBFC;cursor:pointer;transition:var(--transition);min-width:70px}
+td select.cumple-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,115,180,0.12)}
+td select.cumple-select:disabled{background:#F5F6F8;color:var(--gray);cursor:default}
+td .responsable-tag{font-size:11px;font-weight:600;color:var(--primary-dark);background:rgba(0,115,180,0.08);padding:3px 8px;border-radius:6px;white-space:nowrap}
+/* TIPO: A=Azul, B=Naranja, C=Rojo */
+td .tipo-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;color:#fff;display:inline-block}
+td .tipo-badge.tipo-A{background:var(--primary)}
+td .tipo-badge.tipo-B{background:var(--orange)}
+td .tipo-badge.tipo-C{background:var(--danger)}
+td select.estado-select{padding:6px 10px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:600;background:#FAFBFC;cursor:pointer;min-width:90px}
+td select.estado-select:disabled{background:#F5F6F8;color:var(--gray);cursor:default}
+.btn-save,.btn-edit{padding:6px 14px;border-radius:8px;border:none;font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.btn-save{background:var(--primary);color:#fff}
+.btn-save:hover{background:var(--primary-dark)}
+.btn-save:disabled{background:#CBD6E1;cursor:default}
+.btn-edit{background:var(--orange);color:#fff;display:none}
+.btn-edit:hover{background:#d06800}
+.actions-cell{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.photo-cell{display:flex;gap:6px;align-items:center}
+.photo-btn{padding:5px 10px;border-radius:8px;border:1px solid #D5DAE0;background:#F7F8FA;font-size:11px;font-weight:600;cursor:pointer;color:#666;transition:var(--transition);font-family:var(--font-main)}
+.photo-btn:hover{background:#EBEDF0}
+.photo-btn:disabled{opacity:0.5;cursor:default}
+.photo-thumb{width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid #D5DAE0;cursor:pointer;transition:var(--transition)}
+.photo-thumb:hover{transform:scale(1.1);box-shadow:var(--shadow)}
+input[type="file"].hidden-input{display:none}
+.add-item-bar{display:flex;gap:8px;align-items:center;padding:12px 18px;background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:12px;flex-wrap:wrap}
+.add-item-bar input,.add-item-bar select{padding:8px 12px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;flex:1;min-width:100px}
+.add-item-bar input:focus,.add-item-bar select:focus{outline:none;border-color:var(--primary)}
+.btn-add{padding:8px 18px;border-radius:8px;border:none;background:var(--success);color:#fff;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.btn-add:hover{background:#65a03e}
+.sub-tabs{display:flex;gap:0;margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #D5DAE0}
+.sub-tab-btn{padding:10px 20px;font-family:var(--font-main);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:var(--transition);background:#fff;color:var(--gray);flex:1;text-align:center}
+.sub-tab-btn.active{background:var(--primary-dark);color:#fff}
+.sub-tab-btn:hover:not(.active){background:#F0F5FA}
+.sub-panel{display:none}.sub-panel.active{display:block}
+.modal-overlay{position:fixed;inset:0;background:rgba(9,60,113,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-overlay.hidden{display:none}
+.modal-card{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.6);border-radius:20px;padding:40px 36px;width:90%;max-width:400px;box-shadow:var(--shadow-lg);text-align:center}
+.modal-card h2{font-size:20px;font-weight:700;color:var(--primary-dark);margin-bottom:8px}
+.modal-card p{font-size:13px;color:var(--gray);margin-bottom:24px}
+.modal-card input{width:100%;padding:14px 18px;border:2px solid #D5DAE0;border-radius:12px;font-family:var(--font-main);font-size:15px;font-weight:500;transition:var(--transition);text-align:center}
+.modal-card input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(0,115,180,0.12)}
+.modal-card button{margin-top:18px;width:100%;padding:14px;background:var(--gradient-header);color:#fff;border:none;border-radius:12px;font-family:var(--font-main);font-size:15px;font-weight:700;cursor:pointer;transition:var(--transition)}
+.modal-card button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,115,180,0.3)}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:2000;cursor:pointer}
+.lightbox.hidden{display:none}
+.lightbox img{max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.5)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:24px}
+.kpi-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:var(--transition)}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi-bar{height:5px;width:100%}
+.kpi-bar.blue{background:var(--primary)}.kpi-bar.green{background:var(--success)}.kpi-bar.orange{background:var(--orange)}.kpi-bar.purple{background:var(--purple)}.kpi-bar.sky{background:var(--sky)}.kpi-bar.red{background:var(--danger)}
+.kpi-body{padding:14px 16px;text-align:center}
+.kpi-value{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--primary-dark);line-height:1.2}
+.kpi-label{font-size:10px;font-weight:600;color:var(--gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+.dash-section-title{font-size:15px;font-weight:700;color:var(--primary-dark);margin:24px 0 12px 0;padding-bottom:8px;border-bottom:2px solid #E8ECF0}
+.time-cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.time-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;display:flex;align-items:center;gap:14px}
+.time-card-icon{font-size:24px}.time-card-info{flex:1}
+.time-card-label{font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase}
+.time-card-value{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--primary-dark)}
+.activity-log{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #EDF1F5}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:5px;flex-shrink:0}
+.activity-text{font-size:13px;color:#333;line-height:1.4}.activity-text strong{color:var(--primary-dark)}
+.activity-time{font-family:var(--font-mono);font-size:11px;color:var(--gray);margin-left:auto;white-space:nowrap;flex-shrink:0}
+.empty-state{text-align:center;padding:40px;color:var(--gray);font-size:14px}
+.safety-banner{background:linear-gradient(90deg,rgba(9,60,113,0.06),rgba(88,178,231,0.06));border:1px solid rgba(0,115,180,0.15);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.safety-banner-icon{font-size:28px}.safety-banner-text{font-size:14px;font-weight:600;color:var(--primary-dark)}
+.safety-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
+.safety-card-bar{height:5px;width:100%}.safety-card-bar.loto{background:var(--orange)}.safety-card-bar.gold{background:var(--yellow)}
+.safety-card-body{padding:24px}
+.safety-card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.safety-card-header .icon{font-size:28px}.safety-card-header h3{font-size:16px;font-weight:700;color:var(--primary-dark)}
+.safety-card-body>p{font-size:13px;color:#444;line-height:1.6;margin-bottom:14px}
+.safety-card-body .label-sub{font-size:13px;font-weight:700;color:var(--primary-dark);margin:14px 0 8px 0}
+.safety-steps{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}
+.safety-steps li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#333;line-height:1.5}
+.step-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
+.step-badge.orange{background:var(--orange)}.step-badge.yellow{background:#D4B200}
+@media(max-width:768px){.header{padding:12px 16px}.header-title{font-size:14px}.main-content{padding:16px}.tabs-container{padding:0 8px;justify-content:flex-start}.tab-btn{font-size:11px;padding:12px 8px}.progress-card{flex-direction:column;align-items:stretch;gap:10px}.toolbar{flex-direction:column;align-items:stretch}.kpi-row{grid-template-columns:repeat(2,1fr)}.add-item-bar{flex-direction:column}}
+@media print{.header,.tabs-container,.toolbar,.btn-save,.btn-edit,.modal-overlay,.offline-indicator,.section-chevron,.photo-btn,.add-item-bar,.sub-tabs,.btn-add,.lightbox{display:none!important}.tab-panel{display:block!important}.sub-panel{display:block!important}.main-content{max-width:100%;padding:0}table{font-size:10px}.table-wrapper{box-shadow:none}.section-body.collapsed{max-height:none;opacity:1}}
+</style>
 </head>
 <body>
-    <h1>Bienvenido a la App de Entrenamiento</h1>
-    <p>Estado de Firebase: <span id="status">Cargando...</span></p>
+<div class="modal-overlay hidden" id="nameModal"><div class="modal-card"><h2>👷 Bienvenido</h2><p>Ingresa tu nombre para registrar tus actividades</p><input type="text" id="nameInput" placeholder="Tu nombre completo" autocomplete="off"><button id="nameSubmit">Ingresar</button></div></div>
+<div class="lightbox hidden" id="lightbox"><img id="lightboxImg" src=""></div>
+<div class="offline-indicator" id="offlineBar">⚠️ Sin conexión — los cambios se sincronizarán al reconectarse</div>
+<header class="header"><div class="header-left"><div class="avatar" id="avatarEl">--</div><div><div class="header-title">Inspección de Válvulas y Alineación</div><div class="header-subtitle">Usuario: <span id="headerUserName">—</span></div></div></div><div class="header-right"><div class="badge-online"><span class="dot"></span><span id="onlineCount">1 usuario conectado</span></div><button class="btn-change-name" id="btnChangeName">Cambiar nombre</button></div></header>
+<div class="tabs-container">
+  <button class="tab-btn active" data-tab="checklist">📋 Checklist</button>
+  <button class="tab-btn" data-tab="pssr">🔒 PSSR</button>
+  <button class="tab-btn" data-tab="punchlist">🔧 Punch List</button>
+  <button class="tab-btn" data-tab="dashboard">📊 Dashboard</button>
+  <button class="tab-btn" data-tab="seguridad">🛡️ Seguridad</button>
+</div>
+<div class="main-content">
+  <!-- CHECKLIST -->
+  <div class="tab-panel active" id="tab-checklist">
+    <div class="progress-card"><div class="progress-info"><span id="progressText">0 de 6</span> completados (<span id="progressPct">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div></div>
+    <div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="checklist">Todos</button><button class="filter-btn" data-filter="completed" data-target="checklist">Completados</button><button class="filter-btn" data-filter="pending" data-target="checklist">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExportPDF">📄 PDF</button><button class="btn-export" id="btnExportExcel">📊 Excel</button></div></div>
+    <div class="section-header" data-section="s1"><div class="section-number">1</div><div class="section-title">Válvulas</div><div class="section-chevron">▼</div></div>
+    <div class="section-body" data-section-body="s1"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Observaciones</th><th style="width:40px">✓</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="section-1"></tbody></table></div></div>
+    <div class="section-header" data-section="s2"><div class="section-number">2</div><div class="section-title">Puesta en Marcha</div><div class="section-chevron">▼</div></div>
+    <div class="section-body" data-section-body="s2"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Observaciones</th><th style="width:40px">✓</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="section-2"></tbody></table></div></div>
+    <div class="section-header" data-section="s3"><div class="section-number">3</div><div class="section-title">Producción</div><div class="section-chevron">▼</div></div>
+    <div class="section-body" data-section-body="s3"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Observaciones</th><th style="width:40px">✓</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="section-3"></tbody></table></div></div>
+  </div>
+  <!-- PSSR -->
+  <div class="tab-panel" id="tab-pssr">
+    <div class="progress-card"><div class="progress-info"><span id="pssrProgressText">0 de 32</span> verificados (<span id="pssrProgressPct">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="pssrProgressBar"></div></div></div>
+    <div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="pssr">Todos</button><button class="filter-btn" data-filter="completed" data-target="pssr">Verificados</button><button class="filter-btn" data-filter="pending" data-target="pssr">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExportPSSRExcel">📊 Excel PSSR</button></div></div>
+    <div class="section-header" data-section="pssr"><div class="section-number">🔒</div><div class="section-title">Revisión de Seguridad Previa a la Puesta en Marcha</div><div class="section-chevron">▼</div></div>
+    <div class="section-body" data-section-body="pssr"><div class="table-wrapper"><table><thead><tr><th>N°</th><th>Verificación</th><th>Responsable</th><th style="width:90px">Cumple</th><th>Observaciones</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="pssr-body"></tbody></table></div></div>
+  </div>
+  <!-- PUNCH LIST -->
+  <div class="tab-panel" id="tab-punchlist">
+    <div class="progress-card"><div class="progress-info"><span id="plProgressText">0 de 18</span> cerrados (<span id="plProgressPct">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="plProgressBar"></div></div></div>
+    <div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="pl">Todos</button><button class="filter-btn" data-filter="completed" data-target="pl">Cerrados</button><button class="filter-btn" data-filter="pending" data-target="pl">Abiertos</button></div><div class="export-group"><button class="btn-export" id="btnExportPLExcel">📊 Excel PL</button></div></div>
+    <div class="sub-tabs"><button class="sub-tab-btn active" data-subtab="pl_piping">PIPING-MECÁNICA</button><button class="sub-tab-btn" data-subtab="pl_elec">ELEC E I&C</button></div>
+    <div class="sub-panel active" id="sub-pl_piping">
+      <div class="section-header" data-section="pl_pip"><div class="section-number">🔧</div><div class="section-title">Piping - Mecánica</div><div class="section-chevron">▼</div></div>
+      <div class="section-body" data-section-body="pl_pip"><div class="table-wrapper"><table><thead><tr><th>Id</th><th>Ubicación</th><th>Espec.</th><th>Descripción</th><th>Tipo</th><th>Resp.</th><th>Estado</th><th>Foto Cierre</th><th>Observación</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="pl-piping-body"></tbody></table></div></div>
+      <div class="add-item-bar" data-dept="piping"><input type="text" placeholder="Ubicación" data-add="ubicacion"><select data-add="especialidad"><option value="MECANICA">Mecánica</option><option value="CIVIL">Civil</option><option value="PIPING">Piping</option></select><input type="text" placeholder="Descripción del pendiente" data-add="descripcion" style="flex:3"><select data-add="tipo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><input type="text" placeholder="Responsable" data-add="responsable"><button class="btn-add" data-action="add-pl" data-dept="piping">+ Agregar</button></div>
+    </div>
+    <div class="sub-panel" id="sub-pl_elec">
+      <div class="section-header" data-section="pl_elec"><div class="section-number">⚡</div><div class="section-title">Eléctrica e Instrumentación</div><div class="section-chevron">▼</div></div>
+      <div class="section-body" data-section-body="pl_elec"><div class="table-wrapper"><table><thead><tr><th>Id</th><th>Ubicación</th><th>Espec.</th><th>Descripción</th><th>Tipo</th><th>Resp.</th><th>Estado</th><th>Foto Cierre</th><th>Observación</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="pl-elec-body"></tbody></table></div></div>
+      <div class="add-item-bar" data-dept="elec"><input type="text" placeholder="Ubicación" data-add="ubicacion"><select data-add="especialidad"><option value="ELECTRICIDAD">Electricidad</option><option value="INSTRUMENTACION">Instrumentación</option></select><input type="text" placeholder="Descripción del pendiente" data-add="descripcion" style="flex:3"><select data-add="tipo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><input type="text" placeholder="Responsable" data-add="responsable"><button class="btn-add" data-action="add-pl" data-dept="elec">+ Agregar</button></div>
+    </div>
+  </div>
+  <!-- DASHBOARD -->
+  <div class="tab-panel" id="tab-dashboard">
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-bar blue"></div><div class="kpi-body"><div class="kpi-value" id="kpiTotal">6</div><div class="kpi-label">Checklist</div></div></div>
+      <div class="kpi-card"><div class="kpi-bar green"></div><div class="kpi-body"><div class="kpi-value" id="kpiCompleted">0</div><div class="kpi-label">CL Completados</div></div></div>
+      <div class="kpi-card"><div class="kpi-bar purple"></div><div class="kpi-body"><div class="kpi-value" id="kpiPct">0%</div><div class="kpi-label">Avance CL</div></div></div>
+      <div class="kpi-card"><div class="kpi-bar sky"></div><div class="kpi-body"><div class="kpi-value" id="kpiPssr">0%</div><div class="kpi-label">Avance PSSR</div></div></div>
+      <div class="kpi-card"><div class="kpi-bar orange"></div><div class="kpi-body"><div class="kpi-value" id="kpiPlTotal">18</div><div class="kpi-label">Punch List</div></div></div>
+      <div class="kpi-card"><div class="kpi-bar red"></div><div class="kpi-body"><div class="kpi-value" id="kpiPlClosed">0</div><div class="kpi-label">PL Cerrados</div></div></div>
+    </div>
+    <div class="dash-section-title">⏱️ Tiempo de Ejecución</div>
+    <div class="time-cards-row">
+      <div class="time-card"><div class="time-card-icon">📋</div><div class="time-card-info"><div class="time-card-label">Checklist</div><div class="time-card-value" id="timeChecklist">— min</div></div></div>
+      <div class="time-card"><div class="time-card-icon">🔒</div><div class="time-card-info"><div class="time-card-label">PSSR</div><div class="time-card-value" id="timePssr">— min</div></div></div>
+      <div class="time-card"><div class="time-card-icon">🔧</div><div class="time-card-info"><div class="time-card-label">Punch List</div><div class="time-card-value" id="timePl">— min</div></div></div>
+      <div class="time-card"><div class="time-card-icon">⏱️</div><div class="time-card-info"><div class="time-card-label">Total General</div><div class="time-card-value" id="timeTotal">— min</div></div></div>
+    </div>
+    <div class="dash-section-title">Resumen Checklist</div>
+    <div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Estado</th><th>Usuario</th><th>Fecha / Hora</th></tr></thead><tbody id="dashSummary"></tbody></table></div>
+    <div class="dash-section-title">Resumen PSSR</div>
+    <div class="table-wrapper"><table><thead><tr><th>N°</th><th>Verificación</th><th>Cumple</th><th>Usuario</th><th>Fecha / Hora</th></tr></thead><tbody id="dashPssrSummary"></tbody></table></div>
+    <div class="dash-section-title">Registro de Actividad</div>
+    <div class="activity-log" id="activityLog"><div class="empty-state">Sin actividad registrada aún</div></div>
+  </div>
+  <!-- SEGURIDAD -->
+  <div class="tab-panel" id="tab-seguridad">
+    <div class="safety-banner"><div class="safety-banner-icon">🛡️</div><div class="safety-banner-text">Información de seguridad obligatoria antes de iniciar cualquier actividad operativa</div></div>
+    <div class="safety-card"><div class="safety-card-bar loto"></div><div class="safety-card-body"><div class="safety-card-header"><div class="icon">🔒</div><h3>Bloqueo LOTO (Lock Out / Tag Out)</h3></div><p>Es un procedimiento de seguridad industrial que garantiza que las máquinas y equipos peligrosos estén completamente aislados antes de realizar tareas de mantenimiento o intervención.</p><div class="label-sub">Objetivo:</div><p>Evitar que se activen accidentalmente equipos mientras alguien trabaja en ellos.</p><div class="label-sub">Principales pasos del LOTO:</div><ol class="safety-steps"><li><span class="step-badge orange">1</span>Notificar a los involucrados.</li><li><span class="step-badge orange">2</span>Apagar el equipo.</li><li><span class="step-badge orange">3</span>Aislar todas las fuentes de energía.</li><li><span class="step-badge orange">4</span>Bloquear y etiquetar dispositivos de aislamiento.</li><li><span class="step-badge orange">5</span>Verificar ausencia de energía antes de iniciar trabajos.</li><li><span class="step-badge orange">6</span>Realizar el trabajo de forma segura.</li><li><span class="step-badge orange">7</span>Retirar el bloqueo solo por quien lo colocó.</li></ol></div></div>
+    <div class="safety-card"><div class="safety-card-bar gold"></div><div class="safety-card-body"><div class="safety-card-header"><div class="icon">⚡</div><h3>Las 5 Reglas de Oro en Trabajos Eléctricos</h3></div><p>Son un conjunto de medidas esenciales para garantizar la seguridad en trabajos con electricidad.</p><div class="label-sub">Las 5 Reglas de Oro:</div><ol class="safety-steps"><li><span class="step-badge yellow">1</span>Desconexión de la fuente de alimentación y corte efectivo.</li><li><span class="step-badge yellow">2</span>Bloqueo o condenación y señalización para evitar reconexiones.</li><li><span class="step-badge yellow">3</span>Verificar la ausencia de tensión.</li><li><span class="step-badge yellow">4</span>Poner a tierra y en cortocircuito.</li><li><span class="step-badge yellow">5</span>Protección y señalización de la zona de trabajo.</li></ol></div></div>
+  </div>
+</div>
+<script>
+// ========== DATOS ==========
+const CHECKLIST_ITEMS=[{id:'s1_1',section:1,num:'1.1',desc:'Alineación de válvulas'},{id:'s1_2',section:1,num:'1.2',desc:'Chequeo de válvulas'},{id:'s2_1',section:2,num:'2.1',desc:'Fluyendo — verificar flujo operativo'},{id:'s2_2',section:2,num:'2.2',desc:'Confirmación de puesta en marcha'},{id:'s3_1',section:3,num:'3.1',desc:'Revisión de producción'},{id:'s3_2',section:3,num:'3.2',desc:'Seguimiento de producción'}];
+const PSSR_ITEMS=[{id:'p1',num:1,desc:'Sistema de permisos de trabajo habilitado',resp:'SAS / Op.'},{id:'p2',num:2,desc:'Cierre de punch list tipo A y B limitantes para start-up',resp:'SAS / Mant. / Op.'},{id:'p3',num:3,desc:'Disponibilidad y verificación Manuales de Op. y Mtto.',resp:'FAC'},{id:'p4',num:4,desc:'P&ID marcados y actualizados',resp:'FAC'},{id:'p5',num:5,desc:'Planos eléctricos unifilares y de conexión',resp:'FAC'},{id:'p6',num:6,desc:'Sistemas de emergencia verificados',resp:'SAS / Op.'},{id:'p7',num:7,desc:'Análisis de Riesgos del Proceso',resp:'SAS / Mant. / Op.'},{id:'p8',num:8,desc:'Procedimientos de Emergencia documentados',resp:'SAS / Mant. / Op.'},{id:'p9',num:9,desc:'Rutas de evacuación y señalización instaladas',resp:'SAS / Mant. / Op.'},{id:'p10',num:10,desc:'Capacitaciones de Seguridad y Operativas',resp:'SAS / Mant. / Op.'},{id:'p11',num:11,desc:'Condiciones ambientales validadas y permisos',resp:'SAS / Mant. / Op.'},{id:'p12',num:12,desc:'Sistema de Gestión Documental disponible',resp:'FAC'},{id:'p13',num:13,desc:'Instalaciones eléctricas verificadas y energizadas',resp:'Elec. / Ing.'},{id:'p14',num:14,desc:'Protecciones eléctricas y puesta a tierra verificadas',resp:'FAC'},{id:'p15',num:15,desc:'Instalación según planos aprobados y diseño',resp:'FAC'},{id:'p16',num:16,desc:'Documentación accesible y disponible (incluir RFC)',resp:'FAC'},{id:'p17',num:17,desc:'Revisión de cambios (MOC) cerrada',resp:'SAS / Mant. / Op.'},{id:'p18',num:18,desc:'Sistemas de comunicación operativos y probados',resp:'SAS / Mant. / Op.'},{id:'p19',num:19,desc:'Cumplimiento legal y regulatorio verificado',resp:'SAS / Mant. / Op.'},{id:'p20',num:20,desc:'Instrumentos críticos calibrados y probados',resp:'FAC'},{id:'p21',num:21,desc:'Interlocks críticos y lazos de control verificados',resp:'FAC'},{id:'p22',num:22,desc:'Documentación y Control de SCADA y PLC',resp:'FAC'},{id:'p23',num:23,desc:'Pruebas funcionales de ESD y SIS ejecutadas',resp:'FAC'},{id:'p24',num:24,desc:'Repuestos críticos disponibles en sitio',resp:'SAS / Mant. / Op.'},{id:'p25',num:25,desc:'Procedimientos/Programas de mtto preventivo actualizados',resp:'Mant.'},{id:'p26',num:26,desc:'Registro de equipos rotantes instalados y alineados',resp:'FAC'},{id:'p27',num:27,desc:'Registro de inspección a equipos',resp:'FAC'},{id:'p28',num:28,desc:'Manuales y doc técnica de equipos por fabricante',resp:'FAC'},{id:'p29',num:29,desc:'Condiciones ambientales validadas y permisos disponibles',resp:'SAS / Mant. / Op.'},{id:'p30',num:30,desc:'Entrenamiento del personal operativo finalizado',resp:'SAS / Mant. / Op.'},{id:'p31',num:31,desc:'Disponibilidad de Información de Procesos',resp:'SAS / Mant. / Op.'},{id:'p32',num:32,desc:'Diagramas; P&IDs; Filosofías de Op, Hojas de Datos/Peligros Químicos',resp:'FAC / SAS / Mant. / Op.'}];
+const PL_PIPING=[{id:'plp1',num:1,ubic:'SOPORTES TUBERIA',esp:'MECANICA',desc:'RETIRO SOPORTE SOBRANTE',tipo:'C',resp:'JOULES'},{id:'plp2',num:2,ubic:'SOPORTES TUBERIA',esp:'MECANICA',desc:'CORTE ESPARRAGOS PEDESTAL',tipo:'C',resp:'JOULES'},{id:'plp3',num:3,ubic:'TUBERIA PROCESO GENERAL',esp:'MECANICA',desc:'MARCACION Y SENTIDO DE FLUJO',tipo:'B',resp:'JOULES'},{id:'plp4',num:4,ubic:'TUBERIA DRENAJE',esp:'MECANICA',desc:'INSTALACION NEOPRENO CONTACTO TUBERIA CON PEDESTAL',tipo:'C',resp:'JOULES'},{id:'plp5',num:5,ubic:'TUBERIA DRENAJE',esp:'MECANICA',desc:'PINTURA, MARCACION Y SENTIDO DE FLUJO',tipo:'C',resp:'JOULES'},{id:'plp6',num:6,ubic:'SKID MOTOR-BOMBA',esp:'CIVIL',desc:'APLICACIÓN GROUTING',tipo:'A',resp:'SOFORESTA'},{id:'plp7',num:7,ubic:'CONJUNTO MOTOR-BOMBA',esp:'MECANICA',desc:'ALINEACION',tipo:'A',resp:'TECHINT'},{id:'plp8',num:8,ubic:'TUBERIA DE PROCESO',esp:'MECANICA',desc:'RETIRO PLATINAS BASE VALVULA',tipo:'C',resp:'JOULES'},{id:'plp9',num:9,ubic:'TUBERIA DE PROCESO',esp:'MECANICA',desc:'INSTALACION TOMA MUESTRA DESCARGA',tipo:'B',resp:'JOULES'},{id:'plp10',num:10,ubic:'TUBERIA PROCESO GENERAL',esp:'MECANICA',desc:'PINTURA',tipo:'C',resp:'JOULES'},{id:'plp11',num:11,ubic:'TUBERIA PROCESO GENERAL',esp:'MECANICA',desc:'ENTREGA CUPONES DE CORROSION',tipo:'C',resp:'TECPETROL'}];
+const PL_ELEC=[{id:'ple1',num:1,ubic:'SOPORTES TUBERIA GENERAL',esp:'ELECTRICIDAD',desc:'ATERRIZAJE SOPORTES DE TUBERIA',tipo:'C',resp:'BEO'},{id:'ple2',num:2,ubic:'MCC-1 / VSD-BA-001D',esp:'ELECTRICIDAD',desc:'NORMALIZACION CONEXION POTENCIA MOTOR',tipo:'A',resp:'BEO'},{id:'ple3',num:3,ubic:'SOPORTERIA TUBING',esp:'INSTRUMENTACION',desc:'INSTALACION SOPORTE PARA TUBING DE PDIT',tipo:'C',resp:'BEO'},{id:'ple4',num:4,ubic:'SELLOS CORTAFUEGO',esp:'ELECTRICIDAD',desc:'COLOCACION COMPUESTO SELLANTE',tipo:'B',resp:'BEO'},{id:'ple5',num:5,ubic:'TUBERIA CONDUIT ELECTRICA',esp:'ELECTRICIDAD',desc:'IDENTIFICACION FRANJA COLOR NARANJA',tipo:'C',resp:'BEO'},{id:'ple6',num:6,ubic:'MOTOR',esp:'ELECTRICIDAD',desc:'REALIZAR SOLO RUN',tipo:'A',resp:'TCP/BEO/TECHINT'},{id:'ple7',num:7,ubic:'MOTOR-HEATER',esp:'ELECTRICIDAD',desc:'NORMALIZACION CONEXION HEATER MOTOR',tipo:'B',resp:'BEO'}];
+const CHECKLIST_ID='inspeccion_valvulas_alineacion';
+const CL_TOTAL=CHECKLIST_ITEMS.length,PSSR_TOTAL=PSSR_ITEMS.length;
+let currentUser=localStorage.getItem('checklist_user_name')||'';
+let checklistData={},pssrData={},plData={},activityHistory=[];
+let db=null,firebaseReady=false;
+let plNextId={piping:PL_PIPING.length+1,elec:PL_ELEC.length+1};
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        
-        // PEGA AQUÍ TUS CREDENCIALES DE FIREBASE (El objeto firebaseConfig)
-        const firebaseConfig = {
-            apiKey: "AIzaSyCTbQk8uKUaP7cmkmkMnxbfaIqTTWu-G3k",
-           authDomain: "checklist-campo-fm.firebaseapp.com",
-           projectId: "checklist-campo-fm",
-           storageBucket: "checklist-campo-fm.firebasestorage.app",
-           messagingSenderId: "907283891555",
-           appId: "1:907283891555:web:43f0e510f500f8dd3fff56"
-        };
+// ========== FECHA+HORA ==========
+function getDateTimeStr(){const n=new Date();return n.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+n.toLocaleTimeString('es-CO',{hour12:false})}
 
-        const app = initializeApp(firebaseConfig);
-        document.getElementById('status').innerText = "Conectado correctamente";
-    </script>
+// ========== COMPRIMIR IMAGEN ==========
+function compressImage(file,maxW,quality){return new Promise((res,rej)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*(maxW/w));w=maxW}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);res(canvas.toDataURL('image/jpeg',quality))};img.onerror=rej;img.src=e.target.result};reader.onerror=rej;reader.readAsDataURL(file)})}
+
+// ========== RENDER ==========
+function initUI(){
+  [1,2,3].forEach(sec=>{$(`#section-${sec}`).innerHTML=CHECKLIST_ITEMS.filter(i=>i.section===sec).map(i=>`<tr data-id="${i.id}" data-type="cl" class="checklist-row"><td><span class="item-number">${i.num}</span></td><td style="font-weight:500">${i.desc}</td><td><textarea data-field="obs" placeholder="Observaciones..."></textarea></td><td><input type="checkbox" data-field="chk"></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save">Guardar</button><button class="btn-edit" data-action="edit">Editar</button></div></td></tr>`).join('')});
+  $('#pssr-body').innerHTML=PSSR_ITEMS.map(i=>`<tr data-id="${i.id}" data-type="pssr" class="pssr-row"><td><span class="item-number">${i.num}</span></td><td style="font-weight:500">${i.desc}</td><td><span class="responsable-tag">${i.resp}</span></td><td><select class="cumple-select" data-field="cumple"><option value="">—</option><option value="Si">Sí</option><option value="No">No</option><option value="NA">NA</option></select></td><td><textarea data-field="obs" placeholder="Observaciones..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-pssr">Guardar</button><button class="btn-edit" data-action="edit-pssr">Editar</button></div></td></tr>`).join('');
+  renderPLTable('piping',PL_PIPING);renderPLTable('elec',PL_ELEC);updatePlTotal();
+}
+function plRowHTML(item){return `<tr data-id="${item.id}" data-type="pl" data-dept="${item.dept||''}" class="pl-row"><td><span class="item-number">${item.num}</span></td><td style="font-size:12px">${item.ubic}</td><td><span class="responsable-tag">${item.esp}</span></td><td style="font-weight:500;font-size:12px">${item.desc}</td><td><span class="tipo-badge tipo-${item.tipo}">${item.tipo}</span></td><td style="font-size:12px;font-weight:600">${item.resp}</td><td><select class="estado-select" data-field="estado"><option value="ABIERTO">Abierto</option><option value="CERRADO">Cerrado</option></select></td><td><div class="photo-cell"><input type="file" accept="image/*" capture="environment" class="hidden-input" data-photo="${item.id}"><button class="photo-btn" data-action="take-photo" data-photo-id="${item.id}">📷</button><span class="photo-preview" data-preview="${item.id}"></span></div></td><td><textarea data-field="obs" placeholder="Observación..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-pl">Guardar</button><button class="btn-edit" data-action="edit-pl">Editar</button></div></td></tr>`}
+function renderPLTable(dept,items){$(`#pl-${dept}-body`).innerHTML=items.map(i=>{i.dept=dept;return plRowHTML(i)}).join('')}
+
+// ========== MODAL ==========
+function showNameModal(){$('#nameModal').classList.remove('hidden');setTimeout(()=>$('#nameInput').focus(),200)}
+function hideNameModal(){$('#nameModal').classList.add('hidden')}
+function setUser(name){currentUser=name.trim();localStorage.setItem('checklist_user_name',currentUser);$('#avatarEl').textContent=currentUser.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()||'--';$('#headerUserName').textContent=currentUser||'—';hideNameModal();if(firebaseReady)registerPresence()}
+
+// ========== EVENTS ==========
+document.addEventListener('click',e=>{
+  const t=e.target;
+  if(t.matches('.tab-btn')){$$('.tab-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');$$('.tab-panel').forEach(p=>p.classList.remove('active'));$(`#tab-${t.dataset.tab}`).classList.add('active');if(t.dataset.tab==='dashboard'){renderDashSummary();renderDashPssr();updateTimeCards()}return}
+  if(t.matches('.sub-tab-btn')){const p=t.closest('.tab-panel');p.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');p.querySelectorAll('.sub-panel').forEach(sp=>sp.classList.remove('active'));p.querySelector(`#sub-${t.dataset.subtab}`).classList.add('active');return}
+  if(t.closest('.section-header')){const h=t.closest('.section-header');const b=document.querySelector(`[data-section-body="${h.dataset.section}"]`);h.classList.toggle('collapsed');b.classList.toggle('collapsed');return}
+  if(t.matches('.filter-btn')){const g=t.closest('.filter-group');g.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');const tgt=t.dataset.target;if(tgt==='checklist')applyFilter(t.dataset.filter);else if(tgt==='pssr')applyPssrFilter(t.dataset.filter);else if(tgt==='pl')applyPlFilter(t.dataset.filter);return}
+  if(t.matches('[data-action="save"]')){saveRow(t.closest('tr'));return}
+  if(t.matches('[data-action="edit"]')){unlockRow(t.closest('tr'));return}
+  if(t.matches('[data-action="save-pssr"]')){savePssrRow(t.closest('tr'));return}
+  if(t.matches('[data-action="edit-pssr"]')){unlockPssrRow(t.closest('tr'));return}
+  if(t.matches('[data-action="save-pl"]')){savePlRow(t.closest('tr'));return}
+  if(t.matches('[data-action="edit-pl"]')){unlockPlRow(t.closest('tr'));return}
+  if(t.matches('[data-action="take-photo"]')){t.closest('.photo-cell').querySelector('input[type="file"]').click();return}
+  if(t.matches('[data-action="add-pl"]')){addPlItem(t.dataset.dept);return}
+  if(t.matches('.photo-thumb')){$('#lightboxImg').src=t.src;$('#lightbox').classList.remove('hidden');return}
+  if(t.matches('#lightbox')||t.matches('#lightboxImg')){$('#lightbox').classList.add('hidden');return}
+  if(t.matches('#btnChangeName')){showNameModal();return}
+  if(t.matches('#nameSubmit')){const v=$('#nameInput').value.trim();if(v)setUser(v);return}
+  if(t.matches('#btnExportPDF')){window.print();return}
+  if(t.matches('#btnExportExcel')){exportExcel();return}
+  if(t.matches('#btnExportPSSRExcel')){exportPssrExcel();return}
+  if(t.matches('#btnExportPLExcel')){exportPlExcel();return}
+});
+$('#nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim();if(v)setUser(v)}});
+
+// Foto: comprimir y subir a Firebase
+document.addEventListener('change',async e=>{
+  if(e.target.matches('input[type="file"][data-photo]')){
+    const file=e.target.files[0];if(!file)return;
+    const id=e.target.dataset.photo;
+    try{
+      const compressed=await compressImage(file,800,0.5);
+      const prev=document.querySelector(`[data-preview="${id}"]`);
+      prev.innerHTML=`<img src="${compressed}" class="photo-thumb" title="Clic para ampliar">`;
+      // Guardar en Firebase para que todos lo vean
+      if(firebaseReady&&db)db.ref(`punchlist_photos/${CHECKLIST_ID}/${id}`).set(compressed);
+    }catch(err){console.warn('Error comprimiendo imagen:',err)}
+  }
+});
+
+// ========== CL ==========
+function saveRow(row){if(!currentUser){showNameModal();return}const id=row.dataset.id,chk=row.querySelector('[data-field="chk"]'),obs=row.querySelector('[data-field="obs"]');const ts=getDateTimeStr();const d={completed:chk.checked,technician:currentUser,timestamp:ts,observation:obs.value||'',updatedAt:new Date().toISOString()};checklistData[id]=d;if(firebaseReady&&db){db.ref(`checklists/${CHECKLIST_ID}/${id}`).update(d);logActivity(id,currentUser,chk.checked?'completó':'guardó','cl')}lockRow(row,d);updateProgress()}
+function lockRow(r,d){r.querySelector('[data-field="chk"]').checked=d.completed;r.querySelector('[data-field="chk"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save"]').disabled=true;r.querySelector('[data-action="edit"]').style.display='inline-block';r.classList.toggle('completed',!!d.completed)}
+function unlockRow(r){r.querySelector('[data-field="chk"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save"]').disabled=false;r.querySelector('[data-action="edit"]').style.display='none';r.classList.remove('completed')}
+
+// ========== PSSR ==========
+function savePssrRow(row){if(!currentUser){showNameModal();return}const id=row.dataset.id,c=row.querySelector('[data-field="cumple"]'),obs=row.querySelector('[data-field="obs"]');const ts=getDateTimeStr();const d={cumple:c.value,technician:currentUser,timestamp:ts,observation:obs.value||'',updatedAt:new Date().toISOString()};pssrData[id]=d;if(firebaseReady&&db){db.ref(`pssr/${CHECKLIST_ID}/${id}`).update(d);logActivity(id,currentUser,`verificó (${c.value||'—'})`,'pssr')}lockPssrRow(row,d);updatePssrProgress()}
+function lockPssrRow(r,d){r.querySelector('[data-field="cumple"]').value=d.cumple||'';r.querySelector('[data-field="cumple"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-pssr"]').disabled=true;r.querySelector('[data-action="edit-pssr"]').style.display='inline-block';r.classList.toggle('completed',d.cumple==='Si')}
+function unlockPssrRow(r){r.querySelector('[data-field="cumple"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-pssr"]').disabled=false;r.querySelector('[data-action="edit-pssr"]').style.display='none';r.classList.remove('completed')}
+
+// ========== PUNCH LIST ==========
+function savePlRow(row){if(!currentUser){showNameModal();return}const id=row.dataset.id,est=row.querySelector('[data-field="estado"]'),obs=row.querySelector('[data-field="obs"]');const ts=getDateTimeStr();const d={estado:est.value,technician:currentUser,timestamp:ts,observation:obs.value||'',updatedAt:new Date().toISOString()};plData[id]=d;if(firebaseReady&&db){db.ref(`punchlist/${CHECKLIST_ID}/${id}`).update(d);logActivity(id,currentUser,`${est.value==='CERRADO'?'cerró':'actualizó'}`,'pl')}lockPlRow(row,d);updatePlProgress()}
+function lockPlRow(r,d){r.querySelector('[data-field="estado"]').value=d.estado||'ABIERTO';r.querySelector('[data-field="estado"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-pl"]').disabled=true;r.querySelector('[data-action="edit-pl"]').style.display='inline-block';const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=true;r.classList.toggle('row-closed',d.estado==='CERRADO')}
+function unlockPlRow(r){r.querySelector('[data-field="estado"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-pl"]').disabled=false;r.querySelector('[data-action="edit-pl"]').style.display='none';const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=false;r.classList.remove('row-closed')}
+
+function addPlItem(dept){
+  const bar=document.querySelector(`.add-item-bar[data-dept="${dept}"]`);
+  const ubic=bar.querySelector('[data-add="ubicacion"]').value.trim();
+  const esp=bar.querySelector('[data-add="especialidad"]').value;
+  const desc=bar.querySelector('[data-add="descripcion"]').value.trim();
+  const tipo=bar.querySelector('[data-add="tipo"]').value;
+  const resp=bar.querySelector('[data-add="responsable"]').value.trim();
+  if(!desc){alert('Ingresa una descripción');return}
+  const num=plNextId[dept]++;
+  const id=`pl${dept[0]}${num}`;
+  const item={id,num,ubic:ubic||'—',esp,desc:desc.toUpperCase(),tipo,resp:resp||'—',dept};
+  $(`#pl-${dept}-body`).insertAdjacentHTML('beforeend',plRowHTML(item));
+  // Guardar en Firebase para que otros usuarios lo vean
+  if(firebaseReady&&db)db.ref(`punchlist_items/${CHECKLIST_ID}/${id}`).set(item);
+  bar.querySelectorAll('input[type="text"]').forEach(i=>i.value='');
+  updatePlTotal();
+}
+
+// ========== FILTERS ==========
+function applyFilter(f){$$('.checklist-row').forEach(r=>{const d=checklistData[r.dataset.id];const ok=d&&d.completed;r.style.display=f==='all'?'':f==='completed'?(ok?'':'none'):(ok?'none':'')})}
+function applyPssrFilter(f){$$('.pssr-row').forEach(r=>{const d=pssrData[r.dataset.id];const ok=d&&d.cumple&&d.cumple!=='';r.style.display=f==='all'?'':f==='completed'?(ok?'':'none'):(ok?'none':'')})}
+function applyPlFilter(f){$$('.pl-row').forEach(r=>{const d=plData[r.dataset.id];const closed=d&&d.estado==='CERRADO';r.style.display=f==='all'?'':f==='completed'?(closed?'':'none'):(closed?'none':'')})}
+
+// ========== PROGRESS ==========
+function updateProgress(){let c=0;CHECKLIST_ITEMS.forEach(i=>{if(checklistData[i.id]&&checklistData[i.id].completed)c++});const p=Math.round((c/CL_TOTAL)*100);$('#progressText').textContent=`${c} de ${CL_TOTAL}`;$('#progressPct').textContent=`${p}%`;$('#progressBar').style.width=`${p}%`;$('#kpiTotal').textContent=CL_TOTAL;$('#kpiCompleted').textContent=c;$('#kpiPct').textContent=`${p}%`}
+function updatePssrProgress(){let v=0;PSSR_ITEMS.forEach(i=>{if(pssrData[i.id]&&pssrData[i.id].cumple&&pssrData[i.id].cumple!=='')v++});const p=Math.round((v/PSSR_TOTAL)*100);$('#pssrProgressText').textContent=`${v} de ${PSSR_TOTAL}`;$('#pssrProgressPct').textContent=`${p}%`;$('#pssrProgressBar').style.width=`${p}%`;$('#kpiPssr').textContent=`${p}%`}
+function updatePlTotal(){const rows=$$('.pl-row');$('#plProgressText').textContent=`0 de ${rows.length}`;$('#kpiPlTotal').textContent=rows.length}
+function updatePlProgress(){const rows=$$('.pl-row');let closed=0;rows.forEach(r=>{const d=plData[r.dataset.id];if(d&&d.estado==='CERRADO')closed++});const total=rows.length;const p=total?Math.round((closed/total)*100):0;$('#plProgressText').textContent=`${closed} de ${total}`;$('#plProgressPct').textContent=`${p}%`;$('#plProgressBar').style.width=`${p}%`;$('#kpiPlTotal').textContent=total;$('#kpiPlClosed').textContent=closed}
+
+// ========== TIME ==========
+function calcTime(obj){let e=null,l=null;Object.values(obj).forEach(d=>{if(d.updatedAt){const t=new Date(d.updatedAt);if(!e||t<e)e=t;if(!l||t>l)l=t}});if(!e||!l)return null;return Math.round((l-e)/60000)}
+function updateTimeCards(){const ct=calcTime(checklistData),pt=calcTime(pssrData),plt=calcTime(plData),tt=calcTime({...checklistData,...pssrData,...plData});$('#timeChecklist').textContent=ct!==null?`${ct} min`:'— min';$('#timePssr').textContent=pt!==null?`${pt} min`:'— min';$('#timePl').textContent=plt!==null?`${plt} min`:'— min';$('#timeTotal').textContent=tt!==null?`${tt} min`:'— min'}
+
+// ========== DASHBOARD ==========
+function renderDashSummary(){$('#dashSummary').innerHTML=CHECKLIST_ITEMS.map(i=>{const d=checklistData[i.id];return`<tr><td><span class="item-number">${i.num}</span></td><td>${i.desc}</td><td>${d&&d.completed?'✅ Completado':'⏳ Pendiente'}</td><td><span class="tech-name">${d?d.technician:'—'}</span></td><td><span class="time-stamp">${d?d.timestamp:'—'}</span></td></tr>`}).join('')}
+function renderDashPssr(){$('#dashPssrSummary').innerHTML=PSSR_ITEMS.map(i=>{const d=pssrData[i.id];const cl=d&&d.cumple?(d.cumple==='Si'?'✅ Sí':d.cumple==='No'?'❌ No':'➖ NA'):'⏳ Pendiente';return`<tr><td><span class="item-number">${i.num}</span></td><td>${i.desc}</td><td>${cl}</td><td><span class="tech-name">${d?d.technician:'—'}</span></td><td><span class="time-stamp">${d?d.timestamp:'—'}</span></td></tr>`}).join('')}
+
+// ========== ACTIVITY ==========
+function logActivity(id,user,action,type){const items=type==='cl'?CHECKLIST_ITEMS:type==='pssr'?PSSR_ITEMS:[...PL_PIPING,...PL_ELEC];const item=items.find(i=>i.id===id);activityHistory.unshift({text:`<strong>${user}</strong> ${action} <em>${item?item.desc:id}</em>`,time:getDateTimeStr()});if(activityHistory.length>15)activityHistory.pop();if(firebaseReady&&db)db.ref(`activity/${CHECKLIST_ID}`).set(activityHistory);renderActivityLog()}
+function renderActivityLog(){const c=$('#activityLog');if(!activityHistory.length){c.innerHTML='<div class="empty-state">Sin actividad registrada aún</div>';return}c.innerHTML=activityHistory.map(a=>`<div class="activity-item"><div class="activity-dot"></div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div></div>`).join('')}
+
+// ========== EXPORTS ==========
+function exportExcel(){const B='\uFEFF';let csv=B+'#,Sección,Descripción,Observaciones,Completado,Usuario,Fecha/Hora\n';CHECKLIST_ITEMS.forEach(i=>{const d=checklistData[i.id]||{};const s=i.section===1?'Válvulas':i.section===2?'Puesta en Marcha':'Producción';csv+=`${i.num},"${s}","${i.desc}","${(d.observation||'').replace(/"/g,'""')}",${d.completed?'Sí':'No'},"${d.technician||''}","${d.timestamp||''}"\n`});dlCSV(csv,`checklist_${new Date().toISOString().slice(0,10)}.csv`)}
+function exportPssrExcel(){const B='\uFEFF';let csv=B+'N°,Verificación,Responsable,Cumple,Observaciones,Usuario,Fecha/Hora\n';PSSR_ITEMS.forEach(i=>{const d=pssrData[i.id]||{};csv+=`${i.num},"${i.desc}","${i.resp}","${d.cumple||''}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dlCSV(csv,`pssr_${new Date().toISOString().slice(0,10)}.csv`)}
+function exportPlExcel(){const B='\uFEFF';let csv=B+'Id,Departamento,Ubicación,Especialidad,Descripción,Tipo,Responsable,Estado,Observación,Usuario,Fecha/Hora\n';$$('.pl-row').forEach(r=>{const id=r.dataset.id;const d=plData[id]||{};const cells=r.querySelectorAll('td');csv+=`${cells[0].textContent.trim()},"${r.dataset.dept}","${cells[1].textContent.trim()}","${cells[2].textContent.trim()}","${cells[3].textContent.trim()}","${cells[4].textContent.trim()}","${cells[5].textContent.trim()}","${d.estado||'ABIERTO'}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dlCSV(csv,`punchlist_${new Date().toISOString().slice(0,10)}.csv`)}
+function dlCSV(csv,fn){const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=fn;a.click();URL.revokeObjectURL(u)}
+
+// ========== FIREBASE ==========
+const firebaseConfig={
+apiKey: "AIzaSyCTbQk8uKUaP7cmkmkMnxbfaIqTTWu-G3k",
+ authDomain: "checklist-campo-fm.firebaseapp.com",
+ projectId: "checklist-campo-fm",
+ storageBucket: "checklist-campo-fm.firebasestorage.app",
+ messagingSenderId: "907283891555",
+ appId: "1:907283891555:web:43f0e510f500f8dd3fff56"
+};
+function loadFirebase(){const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js';s2.onload=()=>{try{firebase.initializeApp(firebaseConfig);db=firebase.database();firebaseReady=true;initFirebaseListeners();if(currentUser)registerPresence();monitorConnection()}catch(e){console.warn('Firebase init error:',e)}};document.head.appendChild(s2)};s1.onerror=()=>console.warn('Firebase no disponible');document.head.appendChild(s1)}
+
+function initFirebaseListeners(){if(!db)return;
+  db.ref(`checklists/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(!v)return;checklistData=v;CHECKLIST_ITEMS.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="cl"]`);if(r&&v[i.id])lockRow(r,v[i.id])});updateProgress()});
+  db.ref(`pssr/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(!v)return;pssrData=v;PSSR_ITEMS.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="pssr"]`);if(r&&v[i.id])lockPssrRow(r,v[i.id])});updatePssrProgress()});
+  db.ref(`punchlist/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(!v)return;plData=v;$$('.pl-row').forEach(r=>{const d=v[r.dataset.id];if(d)lockPlRow(r,d)});updatePlProgress()});
+  // Nuevos ítems de PL agregados por otros usuarios
+  db.ref(`punchlist_items/${CHECKLIST_ID}`).on('child_added',s=>{
+    const item=s.val();if(!item||!item.id)return;
+    const existing=document.querySelector(`tr[data-id="${item.id}"]`);
+    if(existing)return;// ya existe localmente
+    const dept=item.dept;
+    const tbody=$(`#pl-${dept}-body`);
+    if(tbody){tbody.insertAdjacentHTML('beforeend',plRowHTML(item));updatePlTotal();
+      // Si tiene estado guardado, bloquearlo
+      const d=plData[item.id];if(d){const r=document.querySelector(`tr[data-id="${item.id}"]`);if(r)lockPlRow(r,d)}
+    }
+  });
+  // Fotos compartidas
+  db.ref(`punchlist_photos/${CHECKLIST_ID}`).on('child_added',s=>{
+    const id=s.key;const dataUrl=s.val();if(!dataUrl)return;
+    const prev=document.querySelector(`[data-preview="${id}"]`);
+    if(prev&&!prev.querySelector('img')){prev.innerHTML=`<img src="${dataUrl}" class="photo-thumb" title="Clic para ampliar">`}
+  });
+  db.ref(`activity/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(v&&Array.isArray(v)){activityHistory=v;renderActivityLog()}});
+  db.ref(`presence/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();const c=v?Object.keys(v).length:0;$('#onlineCount').textContent=c===1?'1 usuario conectado':`${c} usuarios conectados`});
+}
+function registerPresence(){if(!db||!currentUser)return;const k=currentUser.replace(/[.#$/\[\]]/g,'_');const r=db.ref(`presence/${CHECKLIST_ID}/${k}`);r.set({name:currentUser,joinedAt:new Date().toISOString()});r.onDisconnect().remove()}
+function monitorConnection(){if(!db)return;db.ref('.info/connected').on('value',s=>{const b=$('#offlineBar');s.val()===true?b.classList.remove('show'):b.classList.add('show')})}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded',()=>{initUI();updateProgress();updatePssrProgress();if(currentUser)setUser(currentUser);else showNameModal();loadFirebase()});
+</script>
 </body>
 </html>
+
