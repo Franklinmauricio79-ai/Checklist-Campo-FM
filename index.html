@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Entrenamiento Gas</title>
+</head>
+<body>
+    <h1>Bienvenido a la App de Entrenamiento</h1>
+    <p>Estado de Firebase: <span id="status">Cargando...</span></p>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        
+        // PEGA AQUÍ TUS CREDENCIALES DE FIREBASE (El objeto firebaseConfig)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCTbQk8uKUaP7cmkmkMnxbfaIqTTWu-G3k",
+           authDomain: "checklist-campo-fm.firebaseapp.com",
+           projectId: "checklist-campo-fm",
+           storageBucket: "checklist-campo-fm.firebasestorage.app",
+           messagingSenderId: "907283891555",
+           appId: "1:907283891555:web:43f0e510f500f8dd3fff56"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        document.getElementById('status').innerText = "Conectado correctamente";
+    </script>
+</body>
+</html>
