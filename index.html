@@ -371,11 +371,11 @@ function dlCSV(csv,fn){const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});
 const firebaseConfig={
   apiKey:"AIzaSyCTbQk8uKUaP7cmkmkMnxbfaIqTTWu-G3k",
   authDomain:"checklist-campo-fm.firebaseapp.com",
+  databaseURL:"https://checklist-campo-fm-default-rtdb.firebaseio.com",
   projectId:"checklist-campo-fm",
   storageBucket:"checklist-campo-fm.firebasestorage.app",
   messagingSenderId:"907283891555",
-  appId:"1:907283891555:web:43f0e510f500f8dd3fff56",
-  databaseURL:"https://checklist-campo-fm-default-rtdb.firebaseio.com"
+  appId:"1:907283891555:web:43f0e510f500f8dd3fff56"
 };
 function loadFirebase(){const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js';s2.onload=()=>{try{firebase.initializeApp(firebaseConfig);db=firebase.database();firebaseReady=true;initFirebaseListeners();if(currentUser)registerPresence();monitorConnection()}catch(e){console.warn('Firebase init error:',e)}};document.head.appendChild(s2)};s1.onerror=()=>console.warn('Firebase no disponible');document.head.appendChild(s1)}
 
