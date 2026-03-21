@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inspección de Válvulas y Alineación</title>
+<title>Checklist Para Puesta en Marcha</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -22,9 +22,8 @@ body{font-family:var(--font-main);background:#F0F2F5;color:#1a1a2e;min-height:10
 .btn-change-name:hover{background:rgba(255,255,255,0.25)}
 .offline-indicator{display:none;background:var(--danger);color:#fff;text-align:center;padding:6px;font-size:12px;font-weight:600}
 .offline-indicator.show{display:block}
-/* TABS CENTRADOS */
 .tabs-container{display:flex;gap:0;background:#fff;border-bottom:2px solid #E8ECF0;padding:0 24px;position:sticky;top:76px;z-index:90;overflow-x:auto;justify-content:center}
-.tab-btn{flex-shrink:0;padding:14px 20px;background:none;border:none;border-bottom:3px solid transparent;font-family:var(--font-main);font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;transition:var(--transition);text-align:center;white-space:nowrap}
+.tab-btn{flex-shrink:0;padding:14px 16px;background:none;border:none;border-bottom:3px solid transparent;font-family:var(--font-main);font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;transition:var(--transition);text-align:center;white-space:nowrap}
 .tab-btn:hover{color:var(--primary)}
 .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(0,115,180,0.04)}
 .main-content{max-width:1200px;margin:0 auto;padding:24px}
@@ -42,6 +41,8 @@ body{font-family:var(--font-main);background:#F0F2F5;color:#1a1a2e;min-height:10
 .export-group{display:flex;gap:8px}
 .btn-export{padding:8px 16px;border-radius:8px;border:1px solid #D5DAE0;background:#F7F8FA;font-family:var(--font-main);font-size:12px;font-weight:500;cursor:pointer;transition:var(--transition);color:#666;display:flex;align-items:center;gap:6px}
 .btn-export:hover{background:#EBEDF0;border-color:#C0C5CC;color:#444}
+.btn-danger-subtle{padding:8px 16px;border-radius:8px;border:1px solid #E8B4B4;background:#FDF5F5;font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition);color:#B44;display:flex;align-items:center;gap:6px}
+.btn-danger-subtle:hover{background:#FCEAEA;border-color:#D88;color:#922}
 .section-header{display:flex;align-items:center;gap:12px;margin:24px 0 0 0;padding:12px 18px;background:linear-gradient(90deg,rgba(0,115,180,0.08),rgba(88,178,231,0.04));border-radius:var(--radius) var(--radius) 0 0;border-left:4px solid var(--primary);cursor:pointer;user-select:none;transition:var(--transition)}
 .section-header:hover{background:linear-gradient(90deg,rgba(0,115,180,0.12),rgba(88,178,231,0.06))}
 .section-header.collapsed{border-radius:var(--radius);margin-bottom:8px}
@@ -49,91 +50,90 @@ body{font-family:var(--font-main);background:#F0F2F5;color:#1a1a2e;min-height:10
 .section-title{font-size:15px;font-weight:700;color:var(--primary-dark);text-transform:uppercase;letter-spacing:0.5px;flex:1}
 .section-chevron{font-size:18px;color:var(--primary);transition:transform 0.3s ease;font-weight:700}
 .section-header.collapsed .section-chevron{transform:rotate(-90deg)}
-.section-body{overflow:hidden;transition:max-height 0.4s ease,opacity 0.3s ease;max-height:8000px;opacity:1}
+.section-body{overflow:hidden;transition:max-height 0.4s ease,opacity 0.3s ease;max-height:12000px;opacity:1}
 .section-body.collapsed{max-height:0;opacity:0}
 .table-wrapper{overflow-x:auto;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);background:var(--bg-surface);margin-bottom:8px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{background:#EDF1F5;color:var(--primary-dark);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;padding:12px 10px;text-align:left;border-bottom:2px solid #D5DAE0;white-space:nowrap}
 tbody tr{transition:var(--transition);border-left:3px solid transparent}
 tbody tr:hover{background:rgba(0,115,180,0.03)}
-tbody tr.completed{border-left:3px solid var(--success);background:rgba(120,180,80,0.04)}
-tbody tr.row-closed{border-left:3px solid var(--success);background:rgba(120,180,80,0.04)}
-tbody td{padding:10px 10px;border-bottom:1px solid #EDF1F5;vertical-align:middle}
+tbody tr.completed,tbody tr.row-closed{border-left:3px solid var(--success);background:rgba(120,180,80,0.04)}
+tbody td{padding:8px 8px;border-bottom:1px solid #EDF1F5;vertical-align:middle}
 td .item-number{font-family:var(--font-mono);font-weight:600;color:var(--primary);font-size:13px}
-td textarea{width:100%;min-width:120px;padding:8px 10px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;resize:vertical;min-height:36px;transition:var(--transition);background:#FAFBFC}
+td textarea{width:100%;min-width:80px;padding:5px 8px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;resize:vertical;min-height:26px;max-height:60px;height:26px;transition:var(--transition);background:#FAFBFC}
 td textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,115,180,0.12);background:#fff}
 td textarea:disabled{background:#F5F6F8;color:var(--gray);border-color:#E8ECF0}
 td input[type="checkbox"]{width:20px;height:20px;accent-color:var(--success);cursor:pointer}
 td input[type="checkbox"]:disabled{cursor:default;opacity:0.6}
 td .tech-name{font-weight:600;color:var(--primary-dark);font-size:12px}
-td .time-stamp{font-family:var(--font-mono);font-size:11px;color:var(--gray);font-weight:500}
-td select.cumple-select{padding:6px 10px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:600;background:#FAFBFC;cursor:pointer;transition:var(--transition);min-width:70px}
-td select.cumple-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,115,180,0.12)}
-td select.cumple-select:disabled{background:#F5F6F8;color:var(--gray);cursor:default}
-td .responsable-tag{font-size:11px;font-weight:600;color:var(--primary-dark);background:rgba(0,115,180,0.08);padding:3px 8px;border-radius:6px;white-space:nowrap}
-/* TIPO: A=Azul, B=Naranja, C=Rojo */
+td .time-stamp{font-family:var(--font-mono);font-size:10px;color:var(--gray);font-weight:500}
+td select{padding:5px 8px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:600;background:#FAFBFC;cursor:pointer;min-width:65px}
+td select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,115,180,0.12)}
+td select:disabled{background:#F5F6F8;color:var(--gray);cursor:default}
+td .responsable-tag{font-size:10px;font-weight:600;color:var(--primary-dark);background:rgba(0,115,180,0.08);padding:2px 6px;border-radius:6px;white-space:nowrap}
 td .tipo-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;color:#fff;display:inline-block}
-td .tipo-badge.tipo-A{background:var(--primary)}
-td .tipo-badge.tipo-B{background:var(--orange)}
-td .tipo-badge.tipo-C{background:var(--danger)}
-td select.estado-select{padding:6px 10px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:600;background:#FAFBFC;cursor:pointer;min-width:90px}
-td select.estado-select:disabled{background:#F5F6F8;color:var(--gray);cursor:default}
-.btn-save,.btn-edit{padding:6px 14px;border-radius:8px;border:none;font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap}
-.btn-save{background:var(--primary);color:#fff}
-.btn-save:hover{background:var(--primary-dark)}
-.btn-save:disabled{background:#CBD6E1;cursor:default}
-.btn-edit{background:var(--orange);color:#fff;display:none}
-.btn-edit:hover{background:#d06800}
-.actions-cell{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.photo-cell{display:flex;gap:6px;align-items:center}
-.photo-btn{padding:5px 10px;border-radius:8px;border:1px solid #D5DAE0;background:#F7F8FA;font-size:11px;font-weight:600;cursor:pointer;color:#666;transition:var(--transition);font-family:var(--font-main)}
-.photo-btn:hover{background:#EBEDF0}
+td .tipo-badge.tipo-A{background:var(--primary)}.tipo-badge.tipo-B{background:var(--orange)}.tipo-badge.tipo-C{background:var(--danger)}
+td .pos-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;display:inline-block}
+td .pos-tag.abierto{background:rgba(120,180,80,0.15);color:#3d7a1a}
+td .pos-tag.cerrado{background:rgba(217,31,31,0.12);color:#a31515}
+.btn-save,.btn-edit{padding:5px 12px;border-radius:8px;border:none;font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.btn-save{background:var(--primary);color:#fff}.btn-save:hover{background:var(--primary-dark)}.btn-save:disabled{background:#CBD6E1;cursor:default}
+.btn-edit{background:var(--orange);color:#fff;display:none}.btn-edit:hover{background:#d06800}
+.btn-del-row{padding:4px 7px;border-radius:8px;border:1px solid #E8B4B4;background:#FDF5F5;font-size:11px;font-weight:600;cursor:pointer;color:#B44;font-family:var(--font-main);display:none}
+.btn-del-row:hover{background:#FCEAEA;color:#922}
+.actions-cell{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.photo-cell{display:flex;gap:4px;align-items:center}
+.photo-btn{padding:4px 8px;border-radius:8px;border:1px solid #D5DAE0;background:#F7F8FA;font-size:11px;cursor:pointer;color:#666;font-family:var(--font-main)}
 .photo-btn:disabled{opacity:0.5;cursor:default}
-.photo-thumb{width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid #D5DAE0;cursor:pointer;transition:var(--transition)}
-.photo-thumb:hover{transform:scale(1.1);box-shadow:var(--shadow)}
+.photo-thumb{width:32px;height:32px;border-radius:6px;object-fit:cover;border:1px solid #D5DAE0;cursor:pointer;transition:var(--transition)}
+.photo-thumb:hover{transform:scale(1.1)}
 input[type="file"].hidden-input{display:none}
 .add-item-bar{display:flex;gap:8px;align-items:center;padding:12px 18px;background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:12px;flex-wrap:wrap}
-.add-item-bar input,.add-item-bar select{padding:8px 12px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;flex:1;min-width:100px}
+.add-item-bar input,.add-item-bar select{padding:8px 12px;border:1px solid #D5DAE0;border-radius:8px;font-family:var(--font-main);font-size:12px;flex:1;min-width:80px}
 .add-item-bar input:focus,.add-item-bar select:focus{outline:none;border-color:var(--primary)}
-.btn-add{padding:8px 18px;border-radius:8px;border:none;background:var(--success);color:#fff;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.btn-add{padding:8px 18px;border-radius:8px;border:none;background:var(--success);color:#fff;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
 .btn-add:hover{background:#65a03e}
 .sub-tabs{display:flex;gap:0;margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #D5DAE0}
 .sub-tab-btn{padding:10px 20px;font-family:var(--font-main);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:var(--transition);background:#fff;color:var(--gray);flex:1;text-align:center}
 .sub-tab-btn.active{background:var(--primary-dark);color:#fff}
 .sub-tab-btn:hover:not(.active){background:#F0F5FA}
 .sub-panel{display:none}.sub-panel.active{display:block}
-.modal-overlay{position:fixed;inset:0;background:rgba(9,60,113,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-overlay{position:fixed;inset:0;background:rgba(9,60,113,0.5);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.hidden{display:none}
 .modal-card{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.6);border-radius:20px;padding:40px 36px;width:90%;max-width:400px;box-shadow:var(--shadow-lg);text-align:center}
 .modal-card h2{font-size:20px;font-weight:700;color:var(--primary-dark);margin-bottom:8px}
 .modal-card p{font-size:13px;color:var(--gray);margin-bottom:24px}
 .modal-card input{width:100%;padding:14px 18px;border:2px solid #D5DAE0;border-radius:12px;font-family:var(--font-main);font-size:15px;font-weight:500;transition:var(--transition);text-align:center}
 .modal-card input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(0,115,180,0.12)}
-.modal-card button{margin-top:18px;width:100%;padding:14px;background:var(--gradient-header);color:#fff;border:none;border-radius:12px;font-family:var(--font-main);font-size:15px;font-weight:700;cursor:pointer;transition:var(--transition)}
-.modal-card button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,115,180,0.3)}
+.modal-card button{margin-top:14px;width:100%;padding:14px;background:var(--gradient-header);color:#fff;border:none;border-radius:12px;font-family:var(--font-main);font-size:15px;font-weight:700;cursor:pointer}
+.modal-card .btn-cancel{background:#E8ECF0;color:var(--gray);margin-top:8px}
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:2000;cursor:pointer}
 .lightbox.hidden{display:none}
-.lightbox img{max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 40px rgba(0,0,0,0.5)}
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:24px}
-.kpi-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:var(--transition)}
-.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
-.kpi-bar{height:5px;width:100%}
-.kpi-bar.blue{background:var(--primary)}.kpi-bar.green{background:var(--success)}.kpi-bar.orange{background:var(--orange)}.kpi-bar.purple{background:var(--purple)}.kpi-bar.sky{background:var(--sky)}.kpi-bar.red{background:var(--danger)}
-.kpi-body{padding:14px 16px;text-align:center}
-.kpi-value{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--primary-dark);line-height:1.2}
-.kpi-label{font-size:10px;font-weight:600;color:var(--gray);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+.lightbox img{max-width:90%;max-height:90%;border-radius:12px}
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px}
+.dash-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.dash-card-bar{height:5px;width:100%}
+.dash-card-bar.blue{background:var(--primary)}.dash-card-bar.green{background:var(--success)}.dash-card-bar.orange{background:var(--orange)}.dash-card-bar.purple{background:var(--purple)}.dash-card-bar.teal{background:#2aa198}.dash-card-bar.red{background:var(--danger)}
+.dash-card-body{padding:18px 20px}
+.dash-card-title{font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px}
+.dash-stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.dash-stat-label{font-size:12px;color:var(--gray);font-weight:500}
+.dash-stat-value{font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--primary-dark)}
+.dash-stat-value.green{color:var(--success)}.dash-stat-value.orange{color:var(--orange)}.dash-stat-value.red{color:var(--danger)}
+.dash-pct{font-family:var(--font-mono);font-size:28px;font-weight:700;color:var(--primary-dark);text-align:center;margin:8px 0}
 .dash-section-title{font-size:15px;font-weight:700;color:var(--primary-dark);margin:24px 0 12px 0;padding-bottom:8px;border-bottom:2px solid #E8ECF0}
-.time-cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-.time-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;display:flex;align-items:center;gap:14px}
-.time-card-icon{font-size:24px}.time-card-info{flex:1}
-.time-card-label{font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase}
-.time-card-value{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--primary-dark)}
+.time-cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.time-card{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 18px;display:flex;align-items:center;gap:12px}
+.time-card-icon{font-size:22px}.time-card-info{flex:1}
+.time-card-label{font-size:11px;font-weight:600;color:var(--gray);text-transform:uppercase}
+.time-card-value{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--primary-dark)}
 .activity-log{background:var(--bg-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
-.activity-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #EDF1F5}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid #EDF1F5}
 .activity-item:last-child{border-bottom:none}
 .activity-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:5px;flex-shrink:0}
-.activity-text{font-size:13px;color:#333;line-height:1.4}.activity-text strong{color:var(--primary-dark)}
-.activity-time{font-family:var(--font-mono);font-size:11px;color:var(--gray);margin-left:auto;white-space:nowrap;flex-shrink:0}
+.activity-text{font-size:12px;color:#333;line-height:1.4}.activity-text strong{color:var(--primary-dark)}
+.activity-time{font-family:var(--font-mono);font-size:10px;color:var(--gray);margin-left:auto;white-space:nowrap}
 .empty-state{text-align:center;padding:40px;color:var(--gray);font-size:14px}
 .safety-banner{background:linear-gradient(90deg,rgba(9,60,113,0.06),rgba(88,178,231,0.06));border:1px solid rgba(0,115,180,0.15);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .safety-banner-icon{font-size:28px}.safety-banner-text{font-size:14px;font-weight:600;color:var(--primary-dark)}
@@ -148,267 +148,163 @@ input[type="file"].hidden-input{display:none}
 .safety-steps li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#333;line-height:1.5}
 .step-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
 .step-badge.orange{background:var(--orange)}.step-badge.yellow{background:#D4B200}
-@media(max-width:768px){.header{padding:12px 16px}.header-title{font-size:14px}.main-content{padding:16px}.tabs-container{padding:0 8px;justify-content:flex-start}.tab-btn{font-size:11px;padding:12px 8px}.progress-card{flex-direction:column;align-items:stretch;gap:10px}.toolbar{flex-direction:column;align-items:stretch}.kpi-row{grid-template-columns:repeat(2,1fr)}.add-item-bar{flex-direction:column}}
-@media print{.header,.tabs-container,.toolbar,.btn-save,.btn-edit,.modal-overlay,.offline-indicator,.section-chevron,.photo-btn,.add-item-bar,.sub-tabs,.btn-add,.lightbox{display:none!important}.tab-panel{display:block!important}.sub-panel{display:block!important}.main-content{max-width:100%;padding:0}table{font-size:10px}.table-wrapper{box-shadow:none}.section-body.collapsed{max-height:none;opacity:1}}
+@media(max-width:768px){.header{padding:12px 16px}.header-title{font-size:14px}.main-content{padding:16px}.tabs-container{padding:0 8px;justify-content:flex-start}.tab-btn{font-size:11px;padding:12px 8px}.progress-card{flex-direction:column;align-items:stretch;gap:10px}.toolbar{flex-direction:column;align-items:stretch}.dash-grid{grid-template-columns:1fr 1fr}.add-item-bar{flex-direction:column}}
+@media print{.header,.tabs-container,.toolbar,.btn-save,.btn-edit,.btn-del-row,.btn-danger-subtle,.modal-overlay,.offline-indicator,.section-chevron,.photo-btn,.add-item-bar,.sub-tabs,.btn-add,.lightbox{display:none!important}.tab-panel{display:block!important}.sub-panel{display:block!important}.main-content{max-width:100%;padding:0}table{font-size:9px}.table-wrapper{box-shadow:none}.section-body.collapsed{max-height:none;opacity:1}}
 </style>
 </head>
 <body>
 <div class="modal-overlay hidden" id="nameModal"><div class="modal-card"><h2>👷 Bienvenido</h2><p>Ingresa tu nombre para registrar tus actividades</p><input type="text" id="nameInput" placeholder="Tu nombre completo" autocomplete="off"><button id="nameSubmit">Ingresar</button></div></div>
+<div class="modal-overlay hidden" id="passModal"><div class="modal-card"><h2>🔐 Acción protegida</h2><p id="passMsg">Ingresa la clave de administrador</p><input type="password" id="passInput" placeholder="Clave" autocomplete="off"><button id="passSubmit">Confirmar</button><button class="btn-cancel" id="passCancel">Cancelar</button></div></div>
 <div class="lightbox hidden" id="lightbox"><img id="lightboxImg" src=""></div>
-<div class="offline-indicator" id="offlineBar">⚠️ Sin conexión — los cambios se sincronizarán al reconectarse</div>
-<header class="header"><div class="header-left"><div class="avatar" id="avatarEl">--</div><div><div class="header-title">Inspección de Válvulas y Alineación</div><div class="header-subtitle">Usuario: <span id="headerUserName">—</span></div></div></div><div class="header-right"><div class="badge-online"><span class="dot"></span><span id="onlineCount">1 usuario conectado</span></div><button class="btn-change-name" id="btnChangeName">Cambiar nombre</button></div></header>
+<div class="offline-indicator" id="offlineBar">⚠️ Sin conexión</div>
+<header class="header"><div class="header-left"><div class="avatar" id="avatarEl">--</div><div><div class="header-title">Checklist Para Puesta en Marcha</div><div class="header-subtitle">Usuario: <span id="headerUserName">—</span></div></div></div><div class="header-right"><div class="badge-online"><span class="dot"></span><span id="onlineCount">1 usuario</span></div><button class="btn-change-name" id="btnChangeName">Cambiar nombre</button></div></header>
 <div class="tabs-container">
-  <button class="tab-btn active" data-tab="checklist">📋 Checklist</button>
-  <button class="tab-btn" data-tab="pssr">🔒 PSSR</button>
+  <button class="tab-btn active" data-tab="pssr">🔒 PSSR</button>
   <button class="tab-btn" data-tab="punchlist">🔧 Punch List</button>
+  <button class="tab-btn" data-tab="valvulas">🔩 Checklist V</button>
+  <button class="tab-btn" data-tab="checklist">📋 Paso a Paso</button>
   <button class="tab-btn" data-tab="dashboard">📊 Dashboard</button>
   <button class="tab-btn" data-tab="seguridad">🛡️ Seguridad</button>
 </div>
 <div class="main-content">
-  <!-- CHECKLIST -->
-  <div class="tab-panel active" id="tab-checklist">
-    <div class="progress-card"><div class="progress-info"><span id="progressText">0 de 6</span> completados (<span id="progressPct">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div></div>
-    <div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="checklist">Todos</button><button class="filter-btn" data-filter="completed" data-target="checklist">Completados</button><button class="filter-btn" data-filter="pending" data-target="checklist">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExportPDF">📄 PDF</button><button class="btn-export" id="btnExportExcel">📊 Excel</button></div></div>
-    <div class="section-header" data-section="s1"><div class="section-number">1</div><div class="section-title">Válvulas</div><div class="section-chevron">▼</div></div>
-    <div class="section-body" data-section-body="s1"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Observaciones</th><th style="width:40px">✓</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="section-1"></tbody></table></div></div>
-    <div class="section-header" data-section="s2"><div class="section-number">2</div><div class="section-title">Puesta en Marcha</div><div class="section-chevron">▼</div></div>
-    <div class="section-body" data-section-body="s2"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Observaciones</th><th style="width:40px">✓</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="section-2"></tbody></table></div></div>
-    <div class="section-header" data-section="s3"><div class="section-number">3</div><div class="section-title">Producción</div><div class="section-chevron">▼</div></div>
-    <div class="section-body" data-section-body="s3"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Observaciones</th><th style="width:40px">✓</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="section-3"></tbody></table></div></div>
-  </div>
-  <!-- PSSR -->
-  <div class="tab-panel" id="tab-pssr">
-    <div class="progress-card"><div class="progress-info"><span id="pssrProgressText">0 de 32</span> verificados (<span id="pssrProgressPct">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="pssrProgressBar"></div></div></div>
-    <div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="pssr">Todos</button><button class="filter-btn" data-filter="completed" data-target="pssr">Verificados</button><button class="filter-btn" data-filter="pending" data-target="pssr">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExportPSSRExcel">📊 Excel PSSR</button></div></div>
-    <div class="section-header" data-section="pssr"><div class="section-number">🔒</div><div class="section-title">Revisión de Seguridad Previa a la Puesta en Marcha</div><div class="section-chevron">▼</div></div>
-    <div class="section-body" data-section-body="pssr"><div class="table-wrapper"><table><thead><tr><th>N°</th><th>Verificación</th><th>Responsable</th><th style="width:90px">Cumple</th><th>Observaciones</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="pssr-body"></tbody></table></div></div>
-  </div>
-  <!-- PUNCH LIST -->
-  <div class="tab-panel" id="tab-punchlist">
-    <div class="progress-card"><div class="progress-info"><span id="plProgressText">0 de 18</span> cerrados (<span id="plProgressPct">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="plProgressBar"></div></div></div>
-    <div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="pl">Todos</button><button class="filter-btn" data-filter="completed" data-target="pl">Cerrados</button><button class="filter-btn" data-filter="pending" data-target="pl">Abiertos</button></div><div class="export-group"><button class="btn-export" id="btnExportPLExcel">📊 Excel PL</button></div></div>
-    <div class="sub-tabs"><button class="sub-tab-btn active" data-subtab="pl_piping">PIPING-MECÁNICA</button><button class="sub-tab-btn" data-subtab="pl_elec">ELEC E I&C</button></div>
-    <div class="sub-panel active" id="sub-pl_piping">
-      <div class="section-header" data-section="pl_pip"><div class="section-number">🔧</div><div class="section-title">Piping - Mecánica</div><div class="section-chevron">▼</div></div>
-      <div class="section-body" data-section-body="pl_pip"><div class="table-wrapper"><table><thead><tr><th>Id</th><th>Ubicación</th><th>Espec.</th><th>Descripción</th><th>Tipo</th><th>Resp.</th><th>Estado</th><th>Foto Cierre</th><th>Observación</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="pl-piping-body"></tbody></table></div></div>
-      <div class="add-item-bar" data-dept="piping"><input type="text" placeholder="Ubicación" data-add="ubicacion"><select data-add="especialidad"><option value="MECANICA">Mecánica</option><option value="CIVIL">Civil</option><option value="PIPING">Piping</option></select><input type="text" placeholder="Descripción del pendiente" data-add="descripcion" style="flex:3"><select data-add="tipo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><input type="text" placeholder="Responsable" data-add="responsable"><button class="btn-add" data-action="add-pl" data-dept="piping">+ Agregar</button></div>
-    </div>
-    <div class="sub-panel" id="sub-pl_elec">
-      <div class="section-header" data-section="pl_elec"><div class="section-number">⚡</div><div class="section-title">Eléctrica e Instrumentación</div><div class="section-chevron">▼</div></div>
-      <div class="section-body" data-section-body="pl_elec"><div class="table-wrapper"><table><thead><tr><th>Id</th><th>Ubicación</th><th>Espec.</th><th>Descripción</th><th>Tipo</th><th>Resp.</th><th>Estado</th><th>Foto Cierre</th><th>Observación</th><th>Usuario</th><th>Fecha / Hora</th><th>Acciones</th></tr></thead><tbody id="pl-elec-body"></tbody></table></div></div>
-      <div class="add-item-bar" data-dept="elec"><input type="text" placeholder="Ubicación" data-add="ubicacion"><select data-add="especialidad"><option value="ELECTRICIDAD">Electricidad</option><option value="INSTRUMENTACION">Instrumentación</option></select><input type="text" placeholder="Descripción del pendiente" data-add="descripcion" style="flex:3"><select data-add="tipo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><input type="text" placeholder="Responsable" data-add="responsable"><button class="btn-add" data-action="add-pl" data-dept="elec">+ Agregar</button></div>
-    </div>
-  </div>
-  <!-- DASHBOARD -->
-  <div class="tab-panel" id="tab-dashboard">
-    <div class="kpi-row">
-      <div class="kpi-card"><div class="kpi-bar blue"></div><div class="kpi-body"><div class="kpi-value" id="kpiTotal">6</div><div class="kpi-label">Checklist</div></div></div>
-      <div class="kpi-card"><div class="kpi-bar green"></div><div class="kpi-body"><div class="kpi-value" id="kpiCompleted">0</div><div class="kpi-label">CL Completados</div></div></div>
-      <div class="kpi-card"><div class="kpi-bar purple"></div><div class="kpi-body"><div class="kpi-value" id="kpiPct">0%</div><div class="kpi-label">Avance CL</div></div></div>
-      <div class="kpi-card"><div class="kpi-bar sky"></div><div class="kpi-body"><div class="kpi-value" id="kpiPssr">0%</div><div class="kpi-label">Avance PSSR</div></div></div>
-      <div class="kpi-card"><div class="kpi-bar orange"></div><div class="kpi-body"><div class="kpi-value" id="kpiPlTotal">18</div><div class="kpi-label">Punch List</div></div></div>
-      <div class="kpi-card"><div class="kpi-bar red"></div><div class="kpi-body"><div class="kpi-value" id="kpiPlClosed">0</div><div class="kpi-label">PL Cerrados</div></div></div>
-    </div>
-    <div class="dash-section-title">⏱️ Tiempo de Ejecución</div>
-    <div class="time-cards-row">
-      <div class="time-card"><div class="time-card-icon">📋</div><div class="time-card-info"><div class="time-card-label">Checklist</div><div class="time-card-value" id="timeChecklist">— min</div></div></div>
-      <div class="time-card"><div class="time-card-icon">🔒</div><div class="time-card-info"><div class="time-card-label">PSSR</div><div class="time-card-value" id="timePssr">— min</div></div></div>
-      <div class="time-card"><div class="time-card-icon">🔧</div><div class="time-card-info"><div class="time-card-label">Punch List</div><div class="time-card-value" id="timePl">— min</div></div></div>
-      <div class="time-card"><div class="time-card-icon">⏱️</div><div class="time-card-info"><div class="time-card-label">Total General</div><div class="time-card-value" id="timeTotal">— min</div></div></div>
-    </div>
-    <div class="dash-section-title">Resumen Checklist</div>
-    <div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Estado</th><th>Usuario</th><th>Fecha / Hora</th></tr></thead><tbody id="dashSummary"></tbody></table></div>
-    <div class="dash-section-title">Resumen PSSR</div>
-    <div class="table-wrapper"><table><thead><tr><th>N°</th><th>Verificación</th><th>Cumple</th><th>Usuario</th><th>Fecha / Hora</th></tr></thead><tbody id="dashPssrSummary"></tbody></table></div>
-    <div class="dash-section-title">Registro de Actividad</div>
-    <div class="activity-log" id="activityLog"><div class="empty-state">Sin actividad registrada aún</div></div>
-  </div>
-  <!-- SEGURIDAD -->
-  <div class="tab-panel" id="tab-seguridad">
-    <div class="safety-banner"><div class="safety-banner-icon">🛡️</div><div class="safety-banner-text">Información de seguridad obligatoria antes de iniciar cualquier actividad operativa</div></div>
-    <div class="safety-card"><div class="safety-card-bar loto"></div><div class="safety-card-body"><div class="safety-card-header"><div class="icon">🔒</div><h3>Bloqueo LOTO (Lock Out / Tag Out)</h3></div><p>Es un procedimiento de seguridad industrial que garantiza que las máquinas y equipos peligrosos estén completamente aislados antes de realizar tareas de mantenimiento o intervención.</p><div class="label-sub">Objetivo:</div><p>Evitar que se activen accidentalmente equipos mientras alguien trabaja en ellos.</p><div class="label-sub">Principales pasos del LOTO:</div><ol class="safety-steps"><li><span class="step-badge orange">1</span>Notificar a los involucrados.</li><li><span class="step-badge orange">2</span>Apagar el equipo.</li><li><span class="step-badge orange">3</span>Aislar todas las fuentes de energía.</li><li><span class="step-badge orange">4</span>Bloquear y etiquetar dispositivos de aislamiento.</li><li><span class="step-badge orange">5</span>Verificar ausencia de energía antes de iniciar trabajos.</li><li><span class="step-badge orange">6</span>Realizar el trabajo de forma segura.</li><li><span class="step-badge orange">7</span>Retirar el bloqueo solo por quien lo colocó.</li></ol></div></div>
-    <div class="safety-card"><div class="safety-card-bar gold"></div><div class="safety-card-body"><div class="safety-card-header"><div class="icon">⚡</div><h3>Las 5 Reglas de Oro en Trabajos Eléctricos</h3></div><p>Son un conjunto de medidas esenciales para garantizar la seguridad en trabajos con electricidad.</p><div class="label-sub">Las 5 Reglas de Oro:</div><ol class="safety-steps"><li><span class="step-badge yellow">1</span>Desconexión de la fuente de alimentación y corte efectivo.</li><li><span class="step-badge yellow">2</span>Bloqueo o condenación y señalización para evitar reconexiones.</li><li><span class="step-badge yellow">3</span>Verificar la ausencia de tensión.</li><li><span class="step-badge yellow">4</span>Poner a tierra y en cortocircuito.</li><li><span class="step-badge yellow">5</span>Protección y señalización de la zona de trabajo.</li></ol></div></div>
-  </div>
+<!-- PSSR --><div class="tab-panel active" id="tab-pssr"><div class="progress-card"><div class="progress-info"><span id="pssrPT">0 de 32</span> verificados (<span id="pssrPP">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="pssrPB"></div></div></div><div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="pssr">Todos</button><button class="filter-btn" data-filter="completed" data-target="pssr">Verificados</button><button class="filter-btn" data-filter="pending" data-target="pssr">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExpPSSR">📊 Excel</button><button class="btn-danger-subtle" data-action="clear-all" data-scope="pssr">🗑️ Borrar todo</button></div></div><div class="section-header" data-section="pssr"><div class="section-number">🔒</div><div class="section-title">PSSR</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="pssr"><div class="table-wrapper"><table><thead><tr><th>N°</th><th>Verificación</th><th>Resp.</th><th>Cumple</th><th>Obs.</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="pssr-body"></tbody></table></div></div></div>
+<!-- PUNCH LIST --><div class="tab-panel" id="tab-punchlist"><div class="progress-card"><div class="progress-info"><span id="plPT">0 de 18</span> cerrados (<span id="plPP">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="plPB"></div></div></div><div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="pl">Todos</button><button class="filter-btn" data-filter="completed" data-target="pl">Cerrados</button><button class="filter-btn" data-filter="pending" data-target="pl">Abiertos</button></div><div class="export-group"><button class="btn-export" id="btnExpPL">📊 Excel</button><button class="btn-danger-subtle" data-action="clear-all" data-scope="punchlist">🗑️ Borrar todo</button></div></div><div class="sub-tabs"><button class="sub-tab-btn active" data-subtab="pl_piping">PIPING-MECÁNICA</button><button class="sub-tab-btn" data-subtab="pl_elec">ELEC E I&C</button></div>
+<div class="sub-panel active" id="sub-pl_piping"><div class="section-header" data-section="pl_pip"><div class="section-number">🔧</div><div class="section-title">Piping - Mecánica</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="pl_pip"><div class="table-wrapper"><table><thead><tr><th>Id</th><th>Ubic.</th><th>Esp.</th><th>Descripción</th><th>Tipo</th><th>Resp.</th><th>Estado</th><th>Foto</th><th>Obs.</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="pl-piping-body"></tbody></table></div></div><div class="add-item-bar" data-dept="piping"><input type="text" placeholder="Ubicación" data-add="ubicacion"><select data-add="especialidad"><option value="MECANICA">Mecánica</option><option value="CIVIL">Civil</option><option value="PIPING">Piping</option></select><input type="text" placeholder="Descripción" data-add="descripcion" style="flex:3"><select data-add="tipo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><input type="text" placeholder="Responsable" data-add="responsable"><button class="btn-add" data-action="add-pl" data-dept="piping">+ Agregar</button></div></div>
+<div class="sub-panel" id="sub-pl_elec"><div class="section-header" data-section="pl_elec"><div class="section-number">⚡</div><div class="section-title">Eléctrica e I&C</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="pl_elec"><div class="table-wrapper"><table><thead><tr><th>Id</th><th>Ubic.</th><th>Esp.</th><th>Descripción</th><th>Tipo</th><th>Resp.</th><th>Estado</th><th>Foto</th><th>Obs.</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="pl-elec-body"></tbody></table></div></div><div class="add-item-bar" data-dept="elec"><input type="text" placeholder="Ubicación" data-add="ubicacion"><select data-add="especialidad"><option value="ELECTRICIDAD">Electricidad</option><option value="INSTRUMENTACION">Instrumentación</option></select><input type="text" placeholder="Descripción" data-add="descripcion" style="flex:3"><select data-add="tipo"><option value="A">A</option><option value="B">B</option><option value="C">C</option></select><input type="text" placeholder="Responsable" data-add="responsable"><button class="btn-add" data-action="add-pl" data-dept="elec">+ Agregar</button></div></div></div>
+<!-- VALVULAS --><div class="tab-panel" id="tab-valvulas"><div class="progress-card"><div class="progress-info"><span id="vlvPT">0 de 47</span> confirmados (<span id="vlvPP">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="vlvPB"></div></div></div><div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="vlv">Todos</button><button class="filter-btn" data-filter="completed" data-target="vlv">Confirmados</button><button class="filter-btn" data-filter="pending" data-target="vlv">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExpVLV">📊 Excel</button><button class="btn-danger-subtle" data-action="clear-all" data-scope="valvulas">🗑️ Borrar todo</button></div></div><div class="section-header" data-section="vlv"><div class="section-number">🔩</div><div class="section-title">Válvulas — Posición para Arranque</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="vlv"><div class="table-wrapper"><table><thead><tr><th>N°</th><th>Dispositivo</th><th>Pos. Arranque</th><th>Confirma</th><th>Obs.</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="vlv-body"></tbody></table></div></div></div>
+<!-- PASO A PASO --><div class="tab-panel" id="tab-checklist"><div class="progress-card"><div class="progress-info"><span id="clPT">0 de 6</span> completados (<span id="clPP">0%</span>)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" id="clPB"></div></div></div><div class="toolbar"><div class="filter-group"><button class="filter-btn active" data-filter="all" data-target="checklist">Todos</button><button class="filter-btn" data-filter="completed" data-target="checklist">Completados</button><button class="filter-btn" data-filter="pending" data-target="checklist">Pendientes</button></div><div class="export-group"><button class="btn-export" id="btnExpPDF">📄 PDF</button><button class="btn-export" id="btnExpCL">📊 Excel</button><button class="btn-danger-subtle" data-action="clear-all" data-scope="checklist">🗑️ Borrar todo</button></div></div>
+<div class="section-header" data-section="s1"><div class="section-number">1</div><div class="section-title">Válvulas</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="s1"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Obs.</th><th>✓</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="section-1"></tbody></table></div></div>
+<div class="section-header" data-section="s2"><div class="section-number">2</div><div class="section-title">Puesta en Marcha</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="s2"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Obs.</th><th>✓</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="section-2"></tbody></table></div></div>
+<div class="section-header" data-section="s3"><div class="section-number">3</div><div class="section-title">Producción</div><div class="section-chevron">▼</div></div><div class="section-body" data-section-body="s3"><div class="table-wrapper"><table><thead><tr><th>#</th><th>Descripción</th><th>Obs.</th><th>✓</th><th>Usuario</th><th>Fecha/Hora</th><th>Acciones</th></tr></thead><tbody id="section-3"></tbody></table></div></div></div>
+<!-- DASHBOARD --><div class="tab-panel" id="tab-dashboard">
+<div class="dash-grid">
+  <div class="dash-card"><div class="dash-card-bar purple"></div><div class="dash-card-body"><div class="dash-card-title">🔒 PSSR</div><div class="dash-pct" id="dPssrPct">0%</div><div class="dash-stat-row"><div class="dash-stat-label">Verificados</div><div class="dash-stat-value green" id="dPssrDone">0</div></div><div class="dash-stat-row"><div class="dash-stat-label">Pendientes</div><div class="dash-stat-value orange" id="dPssrPend">32</div></div><div class="dash-stat-row"><div class="dash-stat-label">Total</div><div class="dash-stat-value" id="dPssrTotal">32</div></div></div></div>
+  <div class="dash-card"><div class="dash-card-bar orange"></div><div class="dash-card-body"><div class="dash-card-title">🔧 Punch List</div><div class="dash-pct" id="dPlPct">0%</div><div class="dash-stat-row"><div class="dash-stat-label">Cerrados</div><div class="dash-stat-value green" id="dPlDone">0</div></div><div class="dash-stat-row"><div class="dash-stat-label">Abiertos</div><div class="dash-stat-value red" id="dPlPend">18</div></div><div class="dash-stat-row"><div class="dash-stat-label">Total</div><div class="dash-stat-value" id="dPlTotal">18</div></div></div></div>
+  <div class="dash-card"><div class="dash-card-bar teal"></div><div class="dash-card-body"><div class="dash-card-title">🔩 Checklist V</div><div class="dash-pct" id="dVlvPct">0%</div><div class="dash-stat-row"><div class="dash-stat-label">Confirmados</div><div class="dash-stat-value green" id="dVlvDone">0</div></div><div class="dash-stat-row"><div class="dash-stat-label">Pendientes</div><div class="dash-stat-value orange" id="dVlvPend">47</div></div><div class="dash-stat-row"><div class="dash-stat-label">Total</div><div class="dash-stat-value" id="dVlvTotal">47</div></div></div></div>
+  <div class="dash-card"><div class="dash-card-bar blue"></div><div class="dash-card-body"><div class="dash-card-title">📋 Paso a Paso</div><div class="dash-pct" id="dClPct">0%</div><div class="dash-stat-row"><div class="dash-stat-label">Completados</div><div class="dash-stat-value green" id="dClDone">0</div></div><div class="dash-stat-row"><div class="dash-stat-label">Pendientes</div><div class="dash-stat-value orange" id="dClPend">6</div></div><div class="dash-stat-row"><div class="dash-stat-label">Total</div><div class="dash-stat-value" id="dClTotal">6</div></div></div></div>
+</div>
+<div class="dash-section-title">⏱️ Tiempo de Ejecución</div>
+<div class="time-cards-row"><div class="time-card"><div class="time-card-icon">🔒</div><div class="time-card-info"><div class="time-card-label">PSSR</div><div class="time-card-value" id="tPssr">—</div></div></div><div class="time-card"><div class="time-card-icon">🔧</div><div class="time-card-info"><div class="time-card-label">Punch List</div><div class="time-card-value" id="tPl">—</div></div></div><div class="time-card"><div class="time-card-icon">🔩</div><div class="time-card-info"><div class="time-card-label">Válvulas</div><div class="time-card-value" id="tVlv">—</div></div></div><div class="time-card"><div class="time-card-icon">📋</div><div class="time-card-info"><div class="time-card-label">Paso a Paso</div><div class="time-card-value" id="tCl">—</div></div></div><div class="time-card"><div class="time-card-icon">⏱️</div><div class="time-card-info"><div class="time-card-label">Total</div><div class="time-card-value" id="tAll">—</div></div></div></div>
+<div class="dash-section-title">Registro de Actividad</div>
+<div class="activity-log" id="activityLog"><div class="empty-state">Sin actividad registrada aún</div></div></div>
+<!-- SEGURIDAD --><div class="tab-panel" id="tab-seguridad"><div class="safety-banner"><div class="safety-banner-icon">🛡️</div><div class="safety-banner-text">Información de seguridad obligatoria antes de iniciar cualquier actividad operativa</div></div><div class="safety-card"><div class="safety-card-bar loto"></div><div class="safety-card-body"><div class="safety-card-header"><div class="icon">🔒</div><h3>Bloqueo LOTO</h3></div><p>Procedimiento que garantiza que máquinas y equipos estén completamente aislados antes de mantenimiento.</p><div class="label-sub">Pasos:</div><ol class="safety-steps"><li><span class="step-badge orange">1</span>Notificar a los involucrados.</li><li><span class="step-badge orange">2</span>Apagar el equipo.</li><li><span class="step-badge orange">3</span>Aislar todas las fuentes de energía.</li><li><span class="step-badge orange">4</span>Bloquear y etiquetar.</li><li><span class="step-badge orange">5</span>Verificar ausencia de energía.</li><li><span class="step-badge orange">6</span>Realizar el trabajo.</li><li><span class="step-badge orange">7</span>Retirar bloqueo solo por quien lo colocó.</li></ol></div></div><div class="safety-card"><div class="safety-card-bar gold"></div><div class="safety-card-body"><div class="safety-card-header"><div class="icon">⚡</div><h3>5 Reglas de Oro — Trabajos Eléctricos</h3></div><ol class="safety-steps"><li><span class="step-badge yellow">1</span>Desconexión y corte efectivo.</li><li><span class="step-badge yellow">2</span>Bloqueo y señalización (LOTO).</li><li><span class="step-badge yellow">3</span>Verificar ausencia de tensión.</li><li><span class="step-badge yellow">4</span>Poner a tierra y en cortocircuito.</li><li><span class="step-badge yellow">5</span>Señalización de la zona de trabajo.</li></ol></div></div></div>
 </div>
 <script>
-// ========== DATOS ==========
-const CHECKLIST_ITEMS=[{id:'s1_1',section:1,num:'1.1',desc:'Alineación de válvulas'},{id:'s1_2',section:1,num:'1.2',desc:'Chequeo de válvulas'},{id:'s2_1',section:2,num:'2.1',desc:'Fluyendo — verificar flujo operativo'},{id:'s2_2',section:2,num:'2.2',desc:'Confirmación de puesta en marcha'},{id:'s3_1',section:3,num:'3.1',desc:'Revisión de producción'},{id:'s3_2',section:3,num:'3.2',desc:'Seguimiento de producción'}];
-const PSSR_ITEMS=[{id:'p1',num:1,desc:'Sistema de permisos de trabajo habilitado',resp:'SAS / Op.'},{id:'p2',num:2,desc:'Cierre de punch list tipo A y B limitantes para start-up',resp:'SAS / Mant. / Op.'},{id:'p3',num:3,desc:'Disponibilidad y verificación Manuales de Op. y Mtto.',resp:'FAC'},{id:'p4',num:4,desc:'P&ID marcados y actualizados',resp:'FAC'},{id:'p5',num:5,desc:'Planos eléctricos unifilares y de conexión',resp:'FAC'},{id:'p6',num:6,desc:'Sistemas de emergencia verificados',resp:'SAS / Op.'},{id:'p7',num:7,desc:'Análisis de Riesgos del Proceso',resp:'SAS / Mant. / Op.'},{id:'p8',num:8,desc:'Procedimientos de Emergencia documentados',resp:'SAS / Mant. / Op.'},{id:'p9',num:9,desc:'Rutas de evacuación y señalización instaladas',resp:'SAS / Mant. / Op.'},{id:'p10',num:10,desc:'Capacitaciones de Seguridad y Operativas',resp:'SAS / Mant. / Op.'},{id:'p11',num:11,desc:'Condiciones ambientales validadas y permisos',resp:'SAS / Mant. / Op.'},{id:'p12',num:12,desc:'Sistema de Gestión Documental disponible',resp:'FAC'},{id:'p13',num:13,desc:'Instalaciones eléctricas verificadas y energizadas',resp:'Elec. / Ing.'},{id:'p14',num:14,desc:'Protecciones eléctricas y puesta a tierra verificadas',resp:'FAC'},{id:'p15',num:15,desc:'Instalación según planos aprobados y diseño',resp:'FAC'},{id:'p16',num:16,desc:'Documentación accesible y disponible (incluir RFC)',resp:'FAC'},{id:'p17',num:17,desc:'Revisión de cambios (MOC) cerrada',resp:'SAS / Mant. / Op.'},{id:'p18',num:18,desc:'Sistemas de comunicación operativos y probados',resp:'SAS / Mant. / Op.'},{id:'p19',num:19,desc:'Cumplimiento legal y regulatorio verificado',resp:'SAS / Mant. / Op.'},{id:'p20',num:20,desc:'Instrumentos críticos calibrados y probados',resp:'FAC'},{id:'p21',num:21,desc:'Interlocks críticos y lazos de control verificados',resp:'FAC'},{id:'p22',num:22,desc:'Documentación y Control de SCADA y PLC',resp:'FAC'},{id:'p23',num:23,desc:'Pruebas funcionales de ESD y SIS ejecutadas',resp:'FAC'},{id:'p24',num:24,desc:'Repuestos críticos disponibles en sitio',resp:'SAS / Mant. / Op.'},{id:'p25',num:25,desc:'Procedimientos/Programas de mtto preventivo actualizados',resp:'Mant.'},{id:'p26',num:26,desc:'Registro de equipos rotantes instalados y alineados',resp:'FAC'},{id:'p27',num:27,desc:'Registro de inspección a equipos',resp:'FAC'},{id:'p28',num:28,desc:'Manuales y doc técnica de equipos por fabricante',resp:'FAC'},{id:'p29',num:29,desc:'Condiciones ambientales validadas y permisos disponibles',resp:'SAS / Mant. / Op.'},{id:'p30',num:30,desc:'Entrenamiento del personal operativo finalizado',resp:'SAS / Mant. / Op.'},{id:'p31',num:31,desc:'Disponibilidad de Información de Procesos',resp:'SAS / Mant. / Op.'},{id:'p32',num:32,desc:'Diagramas; P&IDs; Filosofías de Op, Hojas de Datos/Peligros Químicos',resp:'FAC / SAS / Mant. / Op.'}];
-const PL_PIPING=[{id:'plp1',num:1,ubic:'SOPORTES TUBERIA',esp:'MECANICA',desc:'RETIRO SOPORTE SOBRANTE',tipo:'C',resp:'JOULES'},{id:'plp2',num:2,ubic:'SOPORTES TUBERIA',esp:'MECANICA',desc:'CORTE ESPARRAGOS PEDESTAL',tipo:'C',resp:'JOULES'},{id:'plp3',num:3,ubic:'TUBERIA PROCESO GENERAL',esp:'MECANICA',desc:'MARCACION Y SENTIDO DE FLUJO',tipo:'B',resp:'JOULES'},{id:'plp4',num:4,ubic:'TUBERIA DRENAJE',esp:'MECANICA',desc:'INSTALACION NEOPRENO CONTACTO TUBERIA CON PEDESTAL',tipo:'C',resp:'JOULES'},{id:'plp5',num:5,ubic:'TUBERIA DRENAJE',esp:'MECANICA',desc:'PINTURA, MARCACION Y SENTIDO DE FLUJO',tipo:'C',resp:'JOULES'},{id:'plp6',num:6,ubic:'SKID MOTOR-BOMBA',esp:'CIVIL',desc:'APLICACIÓN GROUTING',tipo:'A',resp:'SOFORESTA'},{id:'plp7',num:7,ubic:'CONJUNTO MOTOR-BOMBA',esp:'MECANICA',desc:'ALINEACION',tipo:'A',resp:'TECHINT'},{id:'plp8',num:8,ubic:'TUBERIA DE PROCESO',esp:'MECANICA',desc:'RETIRO PLATINAS BASE VALVULA',tipo:'C',resp:'JOULES'},{id:'plp9',num:9,ubic:'TUBERIA DE PROCESO',esp:'MECANICA',desc:'INSTALACION TOMA MUESTRA DESCARGA',tipo:'B',resp:'JOULES'},{id:'plp10',num:10,ubic:'TUBERIA PROCESO GENERAL',esp:'MECANICA',desc:'PINTURA',tipo:'C',resp:'JOULES'},{id:'plp11',num:11,ubic:'TUBERIA PROCESO GENERAL',esp:'MECANICA',desc:'ENTREGA CUPONES DE CORROSION',tipo:'C',resp:'TECPETROL'}];
-const PL_ELEC=[{id:'ple1',num:1,ubic:'SOPORTES TUBERIA GENERAL',esp:'ELECTRICIDAD',desc:'ATERRIZAJE SOPORTES DE TUBERIA',tipo:'C',resp:'BEO'},{id:'ple2',num:2,ubic:'MCC-1 / VSD-BA-001D',esp:'ELECTRICIDAD',desc:'NORMALIZACION CONEXION POTENCIA MOTOR',tipo:'A',resp:'BEO'},{id:'ple3',num:3,ubic:'SOPORTERIA TUBING',esp:'INSTRUMENTACION',desc:'INSTALACION SOPORTE PARA TUBING DE PDIT',tipo:'C',resp:'BEO'},{id:'ple4',num:4,ubic:'SELLOS CORTAFUEGO',esp:'ELECTRICIDAD',desc:'COLOCACION COMPUESTO SELLANTE',tipo:'B',resp:'BEO'},{id:'ple5',num:5,ubic:'TUBERIA CONDUIT ELECTRICA',esp:'ELECTRICIDAD',desc:'IDENTIFICACION FRANJA COLOR NARANJA',tipo:'C',resp:'BEO'},{id:'ple6',num:6,ubic:'MOTOR',esp:'ELECTRICIDAD',desc:'REALIZAR SOLO RUN',tipo:'A',resp:'TCP/BEO/TECHINT'},{id:'ple7',num:7,ubic:'MOTOR-HEATER',esp:'ELECTRICIDAD',desc:'NORMALIZACION CONEXION HEATER MOTOR',tipo:'B',resp:'BEO'}];
-const CHECKLIST_ID='inspeccion_valvulas_alineacion';
-const CL_TOTAL=CHECKLIST_ITEMS.length,PSSR_TOTAL=PSSR_ITEMS.length;
-let currentUser=localStorage.getItem('checklist_user_name')||'';
-let checklistData={},pssrData={},plData={},activityHistory=[];
-let db=null,firebaseReady=false;
-let plNextId={piping:PL_PIPING.length+1,elec:PL_ELEC.length+1};
+const ADMIN_PASS='0123';
+const CL=[{id:'s1_1',s:1,n:'1.1',d:'Alineación de válvulas'},{id:'s1_2',s:1,n:'1.2',d:'Chequeo de válvulas'},{id:'s2_1',s:2,n:'2.1',d:'Fluyendo — verificar flujo operativo'},{id:'s2_2',s:2,n:'2.2',d:'Confirmación de puesta en marcha'},{id:'s3_1',s:3,n:'3.1',d:'Revisión de producción'},{id:'s3_2',s:3,n:'3.2',d:'Seguimiento de producción'}];
+const PS=[{id:'p1',n:1,d:'Sistema de permisos de trabajo habilitado',r:'SAS/Op.'},{id:'p2',n:2,d:'Cierre punch list A y B limitantes',r:'SAS/Mant./Op.'},{id:'p3',n:3,d:'Disponibilidad Manuales Op. y Mtto.',r:'FAC'},{id:'p4',n:4,d:'P&ID marcados y actualizados',r:'FAC'},{id:'p5',n:5,d:'Planos eléctricos unifilares',r:'FAC'},{id:'p6',n:6,d:'Sistemas de emergencia verificados',r:'SAS/Op.'},{id:'p7',n:7,d:'Análisis de Riesgos del Proceso',r:'SAS/Mant./Op.'},{id:'p8',n:8,d:'Procedimientos de Emergencia',r:'SAS/Mant./Op.'},{id:'p9',n:9,d:'Rutas de evacuación y señalización',r:'SAS/Mant./Op.'},{id:'p10',n:10,d:'Capacitaciones Seguridad y Operativas',r:'SAS/Mant./Op.'},{id:'p11',n:11,d:'Condiciones ambientales y permisos',r:'SAS/Mant./Op.'},{id:'p12',n:12,d:'Sistema Gestión Documental',r:'FAC'},{id:'p13',n:13,d:'Instalaciones eléctricas verificadas',r:'Elec./Ing.'},{id:'p14',n:14,d:'Protecciones eléctricas y puesta a tierra',r:'FAC'},{id:'p15',n:15,d:'Instalación según planos aprobados',r:'FAC'},{id:'p16',n:16,d:'Documentación accesible (incluir RFC)',r:'FAC'},{id:'p17',n:17,d:'Revisión de cambios (MOC) cerrada',r:'SAS/Mant./Op.'},{id:'p18',n:18,d:'Sistemas comunicación probados',r:'SAS/Mant./Op.'},{id:'p19',n:19,d:'Cumplimiento legal y regulatorio',r:'SAS/Mant./Op.'},{id:'p20',n:20,d:'Instrumentos críticos calibrados',r:'FAC'},{id:'p21',n:21,d:'Interlocks y lazos de control',r:'FAC'},{id:'p22',n:22,d:'Documentación SCADA y PLC',r:'FAC'},{id:'p23',n:23,d:'Pruebas funcionales ESD y SIS',r:'FAC'},{id:'p24',n:24,d:'Repuestos críticos en sitio',r:'SAS/Mant./Op.'},{id:'p25',n:25,d:'Programas mtto preventivo',r:'Mant.'},{id:'p26',n:26,d:'Equipos rotantes instalados',r:'FAC'},{id:'p27',n:27,d:'Registro inspección equipos',r:'FAC'},{id:'p28',n:28,d:'Manuales y doc técnica fabricante',r:'FAC'},{id:'p29',n:29,d:'Condiciones ambientales y permisos',r:'SAS/Mant./Op.'},{id:'p30',n:30,d:'Entrenamiento personal finalizado',r:'SAS/Mant./Op.'},{id:'p31',n:31,d:'Disponibilidad Info de Procesos',r:'SAS/Mant./Op.'},{id:'p32',n:32,d:'Diagramas, P&IDs, Filosofías Op.',r:'FAC/SAS/Mant./Op.'}];
+const PP=[{id:'plp1',n:1,u:'SOPORTES TUBERIA',e:'MEC',d:'RETIRO SOPORTE SOBRANTE',t:'C',r:'JOULES'},{id:'plp2',n:2,u:'SOPORTES TUBERIA',e:'MEC',d:'CORTE ESPARRAGOS PEDESTAL',t:'C',r:'JOULES'},{id:'plp3',n:3,u:'TUB. PROCESO GRAL',e:'MEC',d:'MARCACION Y SENTIDO FLUJO',t:'B',r:'JOULES'},{id:'plp4',n:4,u:'TUB. DRENAJE',e:'MEC',d:'INSTALACION NEOPRENO',t:'C',r:'JOULES'},{id:'plp5',n:5,u:'TUB. DRENAJE',e:'MEC',d:'PINTURA, MARCACION Y FLUJO',t:'C',r:'JOULES'},{id:'plp6',n:6,u:'SKID MOTOR-BOMBA',e:'CIVIL',d:'APLICACIÓN GROUTING',t:'A',r:'SOFORESTA'},{id:'plp7',n:7,u:'CONJ. MOTOR-BOMBA',e:'MEC',d:'ALINEACION',t:'A',r:'TECHINT'},{id:'plp8',n:8,u:'TUB. PROCESO',e:'MEC',d:'RETIRO PLATINAS BASE VLV',t:'C',r:'JOULES'},{id:'plp9',n:9,u:'TUB. PROCESO',e:'MEC',d:'TOMA MUESTRA DESCARGA',t:'B',r:'JOULES'},{id:'plp10',n:10,u:'TUB. PROCESO GRAL',e:'MEC',d:'PINTURA',t:'C',r:'JOULES'},{id:'plp11',n:11,u:'TUB. PROCESO GRAL',e:'MEC',d:'CUPONES CORROSION',t:'C',r:'TECPETROL'}];
+const PE=[{id:'ple1',n:1,u:'SOPORTES TUB. GRAL',e:'ELEC',d:'ATERRIZAJE SOPORTES',t:'C',r:'BEO'},{id:'ple2',n:2,u:'MCC-1/VSD-BA-001D',e:'ELEC',d:'CONEXION POTENCIA MOTOR',t:'A',r:'BEO'},{id:'ple3',n:3,u:'SOPORTERIA TUBING',e:'I&C',d:'SOPORTE TUBING PDIT',t:'C',r:'BEO'},{id:'ple4',n:4,u:'SELLOS CORTAFUEGO',e:'ELEC',d:'COMPUESTO SELLANTE',t:'B',r:'BEO'},{id:'ple5',n:5,u:'CONDUIT ELECTRICA',e:'ELEC',d:'FRANJA COLOR NARANJA',t:'C',r:'BEO'},{id:'ple6',n:6,u:'MOTOR',e:'ELEC',d:'SOLO RUN',t:'A',r:'TCP/BEO/TECHINT'},{id:'ple7',n:7,u:'MOTOR-HEATER',e:'ELEC',d:'CONEXION HEATER MOTOR',t:'B',r:'BEO'}];
+const VV=[{id:'v1',n:1,di:'V/V aguas arriba del filtro',p:'ABIERTO'},{id:'v2',n:2,di:'V/V venteo del filtro 3/4',p:'CERRADO'},{id:'v3',n:3,di:'V/V 1 3/4 hacia PDIT',p:'ABIERTO'},{id:'v4',n:4,di:'V/V 2 3/4 hacia PDIT',p:'ABIERTO'},{id:'v5',n:5,di:'1 PDIT-BA010-0011',p:'ABIERTO'},{id:'v6',n:6,di:'2 PDIT-BA010-0011',p:'ABIERTO'},{id:'v7',n:7,di:'3 PDIT-BA010-0011',p:'ABIERTO'},{id:'v8',n:8,di:'4 PDIT-BA010-0011',p:'CERRADO'},{id:'v9',n:9,di:'5 PDIT-BA010-0011',p:'CERRADO'},{id:'v10',n:10,di:'6 PDIT-BA010-0011',p:'CERRADO'},{id:'v11',n:11,di:'7 PDIT-BA010-0011',p:'CERRADO'},{id:'v12',n:12,di:'V/V aguas arriba del filtro',p:'ABIERTO'},{id:'v13',n:13,di:'V/V 1" drenaje del filtro',p:'CERRADO'},{id:'v14',n:14,di:'V/V 1" Venteo línea drenaje 3/4',p:'CERRADO'},{id:'v15',n:15,di:'V/V 3/4 PI-BA01D-001',p:'ABIERTO'},{id:'v16',n:16,di:'V/V 1 instrumento PDI',p:'ABIERTO'},{id:'v17',n:17,di:'V/V 2 instrumento PDI',p:'CERRADO'},{id:'v18',n:18,di:'V/V 3 instrumento PDI venteo',p:'CERRADO'},{id:'v19',n:19,di:'V/V 3/4 PID-BA01D-001',p:'ABIERTO'},{id:'v20',n:20,di:'V/V 1 instrumento PDI',p:'ABIERTO'},{id:'v21',n:21,di:'V/V 2 instrumento PDI',p:'CERRADO'},{id:'v22',n:22,di:'V/V 3 instrumento PDI',p:'CERRADO'},{id:'v23',n:23,di:'V/V 2 3/4 venteo drenaje',p:'CERRADO'},{id:'v24',n:24,di:'V/V drenaje bomba BA001D',p:'CERRADO'},{id:'v25',n:25,di:'V/V 3/4 Venteo línea descarga',p:'CERRADO'},{id:'v26',n:26,di:'V/V 3/4 PIT-BA01D-002',p:'ABIERTO'},{id:'v27',n:27,di:'V/V 1 instrumento PIT',p:'ABIERTO'},{id:'v28',n:28,di:'V/V 2 instrumento PIT',p:'CERRADO'},{id:'v29',n:29,di:'V/V 3 instrumento PIT',p:'CERRADO'},{id:'v30',n:30,di:'V/V 3/4 PI-BA01D-002',p:'ABIERTO'},{id:'v31',n:31,di:'V/V 1 instrumento PI',p:'ABIERTO'},{id:'v32',n:32,di:'V/V 2 instrumento PI',p:'CERRADO'},{id:'v33',n:33,di:'V/V 3 instrumento PI',p:'CERRADO'},{id:'v34',n:34,di:'V/V 1" drenaje línea descarga',p:'CERRADO'},{id:'v35',n:35,di:'V/V 10" línea de descarga',p:'ABIERTO'},{id:'v36',n:36,di:'V/V 3/4 1 inyección química',p:'CERRADO'},{id:'v37',n:37,di:'V/V 3/4 2 inyección química',p:'CERRADO'},{id:'v38',n:38,di:'V/V 3/4 3 inyección química',p:'CERRADO'},{id:'v39',n:39,di:'V/V 3/4 4 inyección química',p:'CERRADO'},{id:'v40',n:40,di:'V/V 1" Cupón de corrosión',p:'CERRADO'},{id:'v41',n:41,di:'V/V 3/4 toma de muestras',p:'CERRADO'},{id:'v42',n:42,di:'V/V Drenaje colector descarga',p:'CERRADO'},{id:'v43',n:43,di:'V/V Línea futura 12"',p:'CERRADO'},{id:'v44',n:44,di:'V/V Succión 18"',p:'ABIERTO'},{id:'v45',n:45,di:'V/V Descarga colector',p:'ABIERTO'},{id:'v46',n:46,di:'V/V Drenaje 2" conexión nueva',p:'ABIERTO'},{id:'v47',n:47,di:'Venteo Línea succión',p:'ABIERTO'}];
+const CID='inspeccion_valvulas_alineacion';
+let usr=localStorage.getItem('checklist_user_name')||'',clD={},psD={},plD={},vlD={},actH=[];
+let db=null,fbOk=false,plNxt={piping:PP.length+1,elec:PE.length+1},pendAct=null;
 const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
-
-// ========== FECHA+HORA ==========
-function getDateTimeStr(){const n=new Date();return n.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+n.toLocaleTimeString('es-CO',{hour12:false})}
-
-// ========== COMPRIMIR IMAGEN ==========
-function compressImage(file,maxW,quality){return new Promise((res,rej)=>{const reader=new FileReader();reader.onload=e=>{const img=new Image();img.onload=()=>{const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*(maxW/w));w=maxW}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);res(canvas.toDataURL('image/jpeg',quality))};img.onerror=rej;img.src=e.target.result};reader.onerror=rej;reader.readAsDataURL(file)})}
-
-// ========== RENDER ==========
+function ts(){const n=new Date();return n.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+n.toLocaleTimeString('es-CO',{hour12:false})}
+function compImg(f,mW,q){return new Promise((ok,no)=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');let w=img.width,h=img.height;if(w>mW){h=Math.round(h*(mW/w));w=mW}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);ok(c.toDataURL('image/jpeg',q))};img.onerror=no;img.src=e.target.result};r.onerror=no;r.readAsDataURL(f)})}
 function initUI(){
-  [1,2,3].forEach(sec=>{$(`#section-${sec}`).innerHTML=CHECKLIST_ITEMS.filter(i=>i.section===sec).map(i=>`<tr data-id="${i.id}" data-type="cl" class="checklist-row"><td><span class="item-number">${i.num}</span></td><td style="font-weight:500">${i.desc}</td><td><textarea data-field="obs" placeholder="Observaciones..."></textarea></td><td><input type="checkbox" data-field="chk"></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save">Guardar</button><button class="btn-edit" data-action="edit">Editar</button></div></td></tr>`).join('')});
-  $('#pssr-body').innerHTML=PSSR_ITEMS.map(i=>`<tr data-id="${i.id}" data-type="pssr" class="pssr-row"><td><span class="item-number">${i.num}</span></td><td style="font-weight:500">${i.desc}</td><td><span class="responsable-tag">${i.resp}</span></td><td><select class="cumple-select" data-field="cumple"><option value="">—</option><option value="Si">Sí</option><option value="No">No</option><option value="NA">NA</option></select></td><td><textarea data-field="obs" placeholder="Observaciones..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-pssr">Guardar</button><button class="btn-edit" data-action="edit-pssr">Editar</button></div></td></tr>`).join('');
-  renderPLTable('piping',PL_PIPING);renderPLTable('elec',PL_ELEC);updatePlTotal();
+  [1,2,3].forEach(s=>{$(`#section-${s}`).innerHTML=CL.filter(i=>i.s===s).map(i=>`<tr data-id="${i.id}" data-type="cl" class="cl-row"><td><span class="item-number">${i.n}</span></td><td style="font-weight:500">${i.d}</td><td><textarea data-field="obs" placeholder="Obs..."></textarea></td><td><input type="checkbox" data-field="chk"></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save">Guardar</button><button class="btn-edit" data-action="edit">Editar</button><button class="btn-del-row" data-action="del-row" data-scope="checklist">✕</button></div></td></tr>`).join('')});
+  $('#pssr-body').innerHTML=PS.map(i=>`<tr data-id="${i.id}" data-type="pssr" class="ps-row"><td><span class="item-number">${i.n}</span></td><td style="font-weight:500;font-size:12px">${i.d}</td><td><span class="responsable-tag">${i.r}</span></td><td><select data-field="cumple"><option value="">—</option><option value="Si">Sí</option><option value="No">No</option><option value="NA">NA</option></select></td><td><textarea data-field="obs" placeholder="Obs..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-ps">Guardar</button><button class="btn-edit" data-action="edit-ps">Editar</button><button class="btn-del-row" data-action="del-row" data-scope="pssr">✕</button></div></td></tr>`).join('');
+  rPL('piping',PP);rPL('elec',PE);
+  $('#vlv-body').innerHTML=VV.map(i=>`<tr data-id="${i.id}" data-type="vlv" class="vl-row"><td><span class="item-number">${i.n}</span></td><td style="font-weight:500;font-size:12px">${i.di}</td><td><span class="pos-tag ${i.p==='ABIERTO'?'abierto':'cerrado'}">${i.p}</span></td><td><select data-field="cumple"><option value="">—</option><option value="Si">Sí</option><option value="No">No</option></select></td><td><textarea data-field="obs" placeholder="Obs..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-vl">Guardar</button><button class="btn-edit" data-action="edit-vl">Editar</button><button class="btn-del-row" data-action="del-row" data-scope="valvulas">✕</button></div></td></tr>`).join('');
+  uPlTot();
 }
-function plRowHTML(item){return `<tr data-id="${item.id}" data-type="pl" data-dept="${item.dept||''}" class="pl-row"><td><span class="item-number">${item.num}</span></td><td style="font-size:12px">${item.ubic}</td><td><span class="responsable-tag">${item.esp}</span></td><td style="font-weight:500;font-size:12px">${item.desc}</td><td><span class="tipo-badge tipo-${item.tipo}">${item.tipo}</span></td><td style="font-size:12px;font-weight:600">${item.resp}</td><td><select class="estado-select" data-field="estado"><option value="ABIERTO">Abierto</option><option value="CERRADO">Cerrado</option></select></td><td><div class="photo-cell"><input type="file" accept="image/*" capture="environment" class="hidden-input" data-photo="${item.id}"><button class="photo-btn" data-action="take-photo" data-photo-id="${item.id}">📷</button><span class="photo-preview" data-preview="${item.id}"></span></div></td><td><textarea data-field="obs" placeholder="Observación..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-pl">Guardar</button><button class="btn-edit" data-action="edit-pl">Editar</button></div></td></tr>`}
-function renderPLTable(dept,items){$(`#pl-${dept}-body`).innerHTML=items.map(i=>{i.dept=dept;return plRowHTML(i)}).join('')}
-
-// ========== MODAL ==========
-function showNameModal(){$('#nameModal').classList.remove('hidden');setTimeout(()=>$('#nameInput').focus(),200)}
-function hideNameModal(){$('#nameModal').classList.add('hidden')}
-function setUser(name){currentUser=name.trim();localStorage.setItem('checklist_user_name',currentUser);$('#avatarEl').textContent=currentUser.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()||'--';$('#headerUserName').textContent=currentUser||'—';hideNameModal();if(firebaseReady)registerPresence()}
-
-// ========== EVENTS ==========
-document.addEventListener('click',e=>{
-  const t=e.target;
-  if(t.matches('.tab-btn')){$$('.tab-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');$$('.tab-panel').forEach(p=>p.classList.remove('active'));$(`#tab-${t.dataset.tab}`).classList.add('active');if(t.dataset.tab==='dashboard'){renderDashSummary();renderDashPssr();updateTimeCards()}return}
-  if(t.matches('.sub-tab-btn')){const p=t.closest('.tab-panel');p.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');p.querySelectorAll('.sub-panel').forEach(sp=>sp.classList.remove('active'));p.querySelector(`#sub-${t.dataset.subtab}`).classList.add('active');return}
-  if(t.closest('.section-header')){const h=t.closest('.section-header');const b=document.querySelector(`[data-section-body="${h.dataset.section}"]`);h.classList.toggle('collapsed');b.classList.toggle('collapsed');return}
-  if(t.matches('.filter-btn')){const g=t.closest('.filter-group');g.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');const tgt=t.dataset.target;if(tgt==='checklist')applyFilter(t.dataset.filter);else if(tgt==='pssr')applyPssrFilter(t.dataset.filter);else if(tgt==='pl')applyPlFilter(t.dataset.filter);return}
-  if(t.matches('[data-action="save"]')){saveRow(t.closest('tr'));return}
-  if(t.matches('[data-action="edit"]')){unlockRow(t.closest('tr'));return}
-  if(t.matches('[data-action="save-pssr"]')){savePssrRow(t.closest('tr'));return}
-  if(t.matches('[data-action="edit-pssr"]')){unlockPssrRow(t.closest('tr'));return}
-  if(t.matches('[data-action="save-pl"]')){savePlRow(t.closest('tr'));return}
-  if(t.matches('[data-action="edit-pl"]')){unlockPlRow(t.closest('tr'));return}
+function plH(i){return `<tr data-id="${i.id}" data-type="pl" data-dept="${i.dept||''}" class="pl-row"><td><span class="item-number">${i.n}</span></td><td style="font-size:11px">${i.u}</td><td><span class="responsable-tag">${i.e}</span></td><td style="font-weight:500;font-size:11px">${i.d}</td><td><span class="tipo-badge tipo-${i.t}">${i.t}</span></td><td style="font-size:11px;font-weight:600">${i.r}</td><td><select data-field="estado"><option value="ABIERTO">Abierto</option><option value="CERRADO">Cerrado</option></select></td><td><div class="photo-cell"><input type="file" accept="image/*" capture="environment" class="hidden-input" data-photo="${i.id}"><button class="photo-btn" data-action="take-photo">📷</button><span class="photo-preview" data-preview="${i.id}"></span></div></td><td><textarea data-field="obs" placeholder="Obs..."></textarea></td><td><span class="tech-name" data-field="tech">—</span></td><td><span class="time-stamp" data-field="time">—</span></td><td><div class="actions-cell"><button class="btn-save" data-action="save-pl">Guardar</button><button class="btn-edit" data-action="edit-pl">Editar</button><button class="btn-del-row" data-action="del-row" data-scope="punchlist">✕</button></div></td></tr>`}
+function rPL(dept,items){$(`#pl-${dept}-body`).innerHTML=items.map(i=>{i.dept=dept;return plH(i)}).join('')}
+function showNM(){$('#nameModal').classList.remove('hidden');setTimeout(()=>$('#nameInput').focus(),200)}
+function hideNM(){$('#nameModal').classList.add('hidden')}
+function setU(name){usr=name.trim();localStorage.setItem('checklist_user_name',usr);$('#avatarEl').textContent=usr.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()||'--';$('#headerUserName').textContent=usr||'—';hideNM();if(fbOk)regPres()}
+function showPM(msg,cb){pendAct=cb;$('#passMsg').textContent=msg;$('#passInput').value='';$('#passModal').classList.remove('hidden');setTimeout(()=>$('#passInput').focus(),200)}
+function hidePM(){$('#passModal').classList.add('hidden');pendAct=null}
+document.addEventListener('click',e=>{const t=e.target;
+  if(t.matches('.tab-btn')){$$('.tab-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');$$('.tab-panel').forEach(p=>p.classList.remove('active'));$(`#tab-${t.dataset.tab}`).classList.add('active');if(t.dataset.tab==='dashboard')uDash();return}
+  if(t.matches('.sub-tab-btn')){const p=t.closest('.tab-panel');p.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');p.querySelectorAll('.sub-panel').forEach(s=>s.classList.remove('active'));p.querySelector(`#sub-${t.dataset.subtab}`).classList.add('active');return}
+  if(t.closest('.section-header')){const h=t.closest('.section-header'),b=document.querySelector(`[data-section-body="${h.dataset.section}"]`);h.classList.toggle('collapsed');b.classList.toggle('collapsed');return}
+  if(t.matches('.filter-btn')){const g=t.closest('.filter-group');g.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));t.classList.add('active');aFilt(t.dataset.target,t.dataset.filter);return}
+  if(t.matches('[data-action="save"]')){sCL(t.closest('tr'));return}if(t.matches('[data-action="edit"]')){uCL(t.closest('tr'));return}
+  if(t.matches('[data-action="save-ps"]')){sPS(t.closest('tr'));return}if(t.matches('[data-action="edit-ps"]')){uPS(t.closest('tr'));return}
+  if(t.matches('[data-action="save-pl"]')){sPL(t.closest('tr'));return}if(t.matches('[data-action="edit-pl"]')){uPL(t.closest('tr'));return}
+  if(t.matches('[data-action="save-vl"]')){sVL(t.closest('tr'));return}if(t.matches('[data-action="edit-vl"]')){uVL(t.closest('tr'));return}
   if(t.matches('[data-action="take-photo"]')){t.closest('.photo-cell').querySelector('input[type="file"]').click();return}
-  if(t.matches('[data-action="add-pl"]')){addPlItem(t.dataset.dept);return}
+  if(t.matches('[data-action="add-pl"]')){addPL(t.dataset.dept);return}
   if(t.matches('.photo-thumb')){$('#lightboxImg').src=t.src;$('#lightbox').classList.remove('hidden');return}
   if(t.matches('#lightbox')||t.matches('#lightboxImg')){$('#lightbox').classList.add('hidden');return}
-  if(t.matches('#btnChangeName')){showNameModal();return}
-  if(t.matches('#nameSubmit')){const v=$('#nameInput').value.trim();if(v)setUser(v);return}
-  if(t.matches('#btnExportPDF')){window.print();return}
-  if(t.matches('#btnExportExcel')){exportExcel();return}
-  if(t.matches('#btnExportPSSRExcel')){exportPssrExcel();return}
-  if(t.matches('#btnExportPLExcel')){exportPlExcel();return}
+  if(t.matches('#btnChangeName')){showNM();return}
+  if(t.matches('#nameSubmit')){const v=$('#nameInput').value.trim();if(v)setU(v);return}
+  if(t.matches('#passSubmit')){if($('#passInput').value===ADMIN_PASS){hidePM();if(typeof pendAct==='function')pendAct()}else{alert('❌ Clave incorrecta. Solo el administrador puede ejecutar esta acción.');hidePM()}return}
+  if(t.matches('#passCancel')){hidePM();return}
+  if(t.matches('[data-action="clear-all"]')){showPM(`¿Borrar TODOS los registros de esta pestaña?`,()=>clearAll(t.dataset.scope));return}
+  if(t.matches('[data-action="del-row"]')){showPM('¿Eliminar este registro?',()=>delRow(t.closest('tr'),t.dataset.scope));return}
+  if(t.matches('#btnExpPDF')){window.print();return}
+  if(t.matches('#btnExpCL')){xCL();return}if(t.matches('#btnExpPSSR')){xPS();return}if(t.matches('#btnExpPL')){xPL();return}if(t.matches('#btnExpVLV')){xVL();return}
 });
-$('#nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim();if(v)setUser(v)}});
+$('#nameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim();if(v)setU(v)}});
+$('#passInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('#passSubmit').click()});
+document.addEventListener('change',async e=>{if(e.target.matches('input[type="file"][data-photo]')){const f=e.target.files[0];if(!f)return;const id=e.target.dataset.photo;try{const c=await compImg(f,800,0.5);document.querySelector(`[data-preview="${id}"]`).innerHTML=`<img src="${c}" class="photo-thumb">`;if(fbOk&&db)db.ref(`pl_photos/${CID}/${id}`).set(c)}catch(er){console.warn(er)}}});
 
-// Foto: comprimir y subir a Firebase
-document.addEventListener('change',async e=>{
-  if(e.target.matches('input[type="file"][data-photo]')){
-    const file=e.target.files[0];if(!file)return;
-    const id=e.target.dataset.photo;
-    try{
-      const compressed=await compressImage(file,800,0.5);
-      const prev=document.querySelector(`[data-preview="${id}"]`);
-      prev.innerHTML=`<img src="${compressed}" class="photo-thumb" title="Clic para ampliar">`;
-      // Guardar en Firebase para que todos lo vean
-      if(firebaseReady&&db)db.ref(`punchlist_photos/${CHECKLIST_ID}/${id}`).set(compressed);
-    }catch(err){console.warn('Error comprimiendo imagen:',err)}
-  }
-});
+// SAVE/LOCK
+function sCL(r){if(!usr){showNM();return}const id=r.dataset.id,ck=r.querySelector('[data-field="chk"]'),ob=r.querySelector('[data-field="obs"]');const d={completed:ck.checked,technician:usr,timestamp:ts(),observation:ob.value||'',updatedAt:new Date().toISOString()};clD[id]=d;if(fbOk&&db){db.ref(`checklists/${CID}/${id}`).update(d);logA(id,usr,ck.checked?'completó':'guardó','cl')}lkCL(r,d);uProg()}
+function lkCL(r,d){r.querySelector('[data-field="chk"]').checked=d.completed;r.querySelector('[data-field="chk"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save"]').disabled=true;r.querySelector('[data-action="edit"]').style.display='inline-block';r.querySelector('[data-action="del-row"]').style.display='inline-block';r.classList.toggle('completed',!!d.completed)}
+function uCL(r){r.querySelector('[data-field="chk"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save"]').disabled=false;r.querySelector('[data-action="edit"]').style.display='none';r.querySelector('[data-action="del-row"]').style.display='none';r.classList.remove('completed')}
+function sPS(r){if(!usr){showNM();return}const id=r.dataset.id,c=r.querySelector('[data-field="cumple"]'),ob=r.querySelector('[data-field="obs"]');const d={cumple:c.value,technician:usr,timestamp:ts(),observation:ob.value||'',updatedAt:new Date().toISOString()};psD[id]=d;if(fbOk&&db){db.ref(`pssr/${CID}/${id}`).update(d);logA(id,usr,`verificó (${c.value})`,'ps')}lkPS(r,d);uPssr()}
+function lkPS(r,d){r.querySelector('[data-field="cumple"]').value=d.cumple||'';r.querySelector('[data-field="cumple"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-ps"]').disabled=true;r.querySelector('[data-action="edit-ps"]').style.display='inline-block';r.querySelector('[data-action="del-row"]').style.display='inline-block';r.classList.toggle('completed',d.cumple==='Si')}
+function uPS(r){r.querySelector('[data-field="cumple"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-ps"]').disabled=false;r.querySelector('[data-action="edit-ps"]').style.display='none';r.querySelector('[data-action="del-row"]').style.display='none';r.classList.remove('completed')}
+function sPL(r){if(!usr){showNM();return}const id=r.dataset.id,es=r.querySelector('[data-field="estado"]'),ob=r.querySelector('[data-field="obs"]');const d={estado:es.value,technician:usr,timestamp:ts(),observation:ob.value||'',updatedAt:new Date().toISOString()};plD[id]=d;if(fbOk&&db){db.ref(`punchlist/${CID}/${id}`).update(d);logA(id,usr,es.value==='CERRADO'?'cerró':'actualizó','pl')}lkPL(r,d);uPl()}
+function lkPL(r,d){r.querySelector('[data-field="estado"]').value=d.estado||'ABIERTO';r.querySelector('[data-field="estado"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-pl"]').disabled=true;r.querySelector('[data-action="edit-pl"]').style.display='inline-block';r.querySelector('[data-action="del-row"]').style.display='inline-block';const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=true;r.classList.toggle('row-closed',d.estado==='CERRADO')}
+function uPL(r){r.querySelector('[data-field="estado"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-pl"]').disabled=false;r.querySelector('[data-action="edit-pl"]').style.display='none';r.querySelector('[data-action="del-row"]').style.display='none';const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=false;r.classList.remove('row-closed')}
+function sVL(r){if(!usr){showNM();return}const id=r.dataset.id,c=r.querySelector('[data-field="cumple"]'),ob=r.querySelector('[data-field="obs"]');const d={cumple:c.value,technician:usr,timestamp:ts(),observation:ob.value||'',updatedAt:new Date().toISOString()};vlD[id]=d;if(fbOk&&db){db.ref(`valvulas/${CID}/${id}`).update(d);logA(id,usr,`confirmó (${c.value})`,'vl')}lkVL(r,d);uVlv()}
+function lkVL(r,d){r.querySelector('[data-field="cumple"]').value=d.cumple||'';r.querySelector('[data-field="cumple"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-vl"]').disabled=true;r.querySelector('[data-action="edit-vl"]').style.display='inline-block';r.querySelector('[data-action="del-row"]').style.display='inline-block';r.classList.toggle('completed',d.cumple==='Si')}
+function uVL(r){r.querySelector('[data-field="cumple"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-vl"]').disabled=false;r.querySelector('[data-action="edit-vl"]').style.display='none';r.querySelector('[data-action="del-row"]').style.display='none';r.classList.remove('completed')}
+function addPL(dept){const bar=document.querySelector(`.add-item-bar[data-dept="${dept}"]`);const desc=bar.querySelector('[data-add="descripcion"]').value.trim();if(!desc){alert('Ingresa descripción');return}const num=plNxt[dept]++;const id=`pl${dept[0]}${num}`;const item={id,n:num,u:bar.querySelector('[data-add="ubicacion"]').value.trim()||'—',e:bar.querySelector('[data-add="especialidad"]').value,d:desc.toUpperCase(),t:bar.querySelector('[data-add="tipo"]').value,r:bar.querySelector('[data-add="responsable"]').value.trim()||'—',dept};$(`#pl-${dept}-body`).insertAdjacentHTML('beforeend',plH(item));if(fbOk&&db)db.ref(`pl_items/${CID}/${id}`).set(item);bar.querySelectorAll('input[type="text"]').forEach(i=>i.value='');uPlTot()}
 
-// ========== CL ==========
-function saveRow(row){if(!currentUser){showNameModal();return}const id=row.dataset.id,chk=row.querySelector('[data-field="chk"]'),obs=row.querySelector('[data-field="obs"]');const ts=getDateTimeStr();const d={completed:chk.checked,technician:currentUser,timestamp:ts,observation:obs.value||'',updatedAt:new Date().toISOString()};checklistData[id]=d;if(firebaseReady&&db){db.ref(`checklists/${CHECKLIST_ID}/${id}`).update(d);logActivity(id,currentUser,chk.checked?'completó':'guardó','cl')}lockRow(row,d);updateProgress()}
-function lockRow(r,d){r.querySelector('[data-field="chk"]').checked=d.completed;r.querySelector('[data-field="chk"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save"]').disabled=true;r.querySelector('[data-action="edit"]').style.display='inline-block';r.classList.toggle('completed',!!d.completed)}
-function unlockRow(r){r.querySelector('[data-field="chk"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save"]').disabled=false;r.querySelector('[data-action="edit"]').style.display='none';r.classList.remove('completed')}
+// DELETE
+function clearAll(scope){const refs={pssr:`pssr/${CID}`,checklist:`checklists/${CID}`,punchlist:`punchlist/${CID}`,valvulas:`valvulas/${CID}`};if(fbOk&&db&&refs[scope])db.ref(refs[scope]).remove();const map={pssr:{d:'psD',sel:'.ps-row'},checklist:{d:'clD',sel:'.cl-row'},punchlist:{d:'plD',sel:'.pl-row'},valvulas:{d:'vlD',sel:'.vl-row'}};const m=map[scope];if(!m)return;if(scope==='pssr')psD={};else if(scope==='checklist')clD={};else if(scope==='punchlist')plD={};else vlD={};$$(m.sel).forEach(r=>rstRow(r));uAll()}
+function rstRow(r){r.classList.remove('completed','row-closed');r.querySelectorAll('select').forEach(s=>{s.value=s.options[0].value;s.disabled=false});r.querySelectorAll('textarea').forEach(t=>{t.value='';t.disabled=false});r.querySelectorAll('input[type="checkbox"]').forEach(c=>{c.checked=false;c.disabled=false});r.querySelectorAll('.tech-name').forEach(s=>s.textContent='—');r.querySelectorAll('.time-stamp').forEach(s=>s.textContent='—');r.querySelectorAll('.btn-save').forEach(b=>b.disabled=false);r.querySelectorAll('.btn-edit').forEach(b=>b.style.display='none');r.querySelectorAll('.btn-del-row').forEach(b=>b.style.display='none');const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=false}
+function delRow(row,scope){const id=row.dataset.id;const refs={pssr:`pssr/${CID}/${id}`,checklist:`checklists/${CID}/${id}`,punchlist:`punchlist/${CID}/${id}`,valvulas:`valvulas/${CID}/${id}`};if(fbOk&&db&&refs[scope])db.ref(refs[scope]).remove();if(scope==='pssr')delete psD[id];else if(scope==='checklist')delete clD[id];else if(scope==='punchlist')delete plD[id];else delete vlD[id];rstRow(row);uAll()}
 
-// ========== PSSR ==========
-function savePssrRow(row){if(!currentUser){showNameModal();return}const id=row.dataset.id,c=row.querySelector('[data-field="cumple"]'),obs=row.querySelector('[data-field="obs"]');const ts=getDateTimeStr();const d={cumple:c.value,technician:currentUser,timestamp:ts,observation:obs.value||'',updatedAt:new Date().toISOString()};pssrData[id]=d;if(firebaseReady&&db){db.ref(`pssr/${CHECKLIST_ID}/${id}`).update(d);logActivity(id,currentUser,`verificó (${c.value||'—'})`,'pssr')}lockPssrRow(row,d);updatePssrProgress()}
-function lockPssrRow(r,d){r.querySelector('[data-field="cumple"]').value=d.cumple||'';r.querySelector('[data-field="cumple"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-pssr"]').disabled=true;r.querySelector('[data-action="edit-pssr"]').style.display='inline-block';r.classList.toggle('completed',d.cumple==='Si')}
-function unlockPssrRow(r){r.querySelector('[data-field="cumple"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-pssr"]').disabled=false;r.querySelector('[data-action="edit-pssr"]').style.display='none';r.classList.remove('completed')}
+// FILTERS
+function aFilt(tgt,f){const map={checklist:{sel:'.cl-row',d:clD,k:'completed',chk:true},pssr:{sel:'.ps-row',d:psD,k:'cumple'},pl:{sel:'.pl-row',d:plD,k:'estado',est:true},vlv:{sel:'.vl-row',d:vlD,k:'cumple'}};const c=map[tgt];if(!c)return;$$(c.sel).forEach(r=>{const d=c.d[r.dataset.id];let done;if(c.chk)done=d&&d.completed;else if(c.est)done=d&&d.estado==='CERRADO';else done=d&&d[c.k]&&d[c.k]!=='';r.style.display=f==='all'?'':f==='completed'?(done?'':'none'):(done?'none':'')})}
 
-// ========== PUNCH LIST ==========
-function savePlRow(row){if(!currentUser){showNameModal();return}const id=row.dataset.id,est=row.querySelector('[data-field="estado"]'),obs=row.querySelector('[data-field="obs"]');const ts=getDateTimeStr();const d={estado:est.value,technician:currentUser,timestamp:ts,observation:obs.value||'',updatedAt:new Date().toISOString()};plData[id]=d;if(firebaseReady&&db){db.ref(`punchlist/${CHECKLIST_ID}/${id}`).update(d);logActivity(id,currentUser,`${est.value==='CERRADO'?'cerró':'actualizó'}`,'pl')}lockPlRow(row,d);updatePlProgress()}
-function lockPlRow(r,d){r.querySelector('[data-field="estado"]').value=d.estado||'ABIERTO';r.querySelector('[data-field="estado"]').disabled=true;r.querySelector('[data-field="obs"]').value=d.observation||'';r.querySelector('[data-field="obs"]').disabled=true;r.querySelector('[data-field="tech"]').textContent=d.technician||'—';r.querySelector('[data-field="time"]').textContent=d.timestamp||'—';r.querySelector('[data-action="save-pl"]').disabled=true;r.querySelector('[data-action="edit-pl"]').style.display='inline-block';const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=true;r.classList.toggle('row-closed',d.estado==='CERRADO')}
-function unlockPlRow(r){r.querySelector('[data-field="estado"]').disabled=false;r.querySelector('[data-field="obs"]').disabled=false;r.querySelector('[data-action="save-pl"]').disabled=false;r.querySelector('[data-action="edit-pl"]').style.display='none';const pb=r.querySelector('.photo-btn');if(pb)pb.disabled=false;r.classList.remove('row-closed')}
+// PROGRESS
+function uProg(){let c=0;CL.forEach(i=>{if(clD[i.id]&&clD[i.id].completed)c++});const p=Math.round((c/CL.length)*100);$('#clPT').textContent=`${c} de ${CL.length}`;$('#clPP').textContent=`${p}%`;$('#clPB').style.width=`${p}%`;$('#dClPct').textContent=`${p}%`;$('#dClDone').textContent=c;$('#dClPend').textContent=CL.length-c;$('#dClTotal').textContent=CL.length}
+function uPssr(){let v=0;PS.forEach(i=>{if(psD[i.id]&&psD[i.id].cumple&&psD[i.id].cumple!=='')v++});const p=Math.round((v/PS.length)*100);$('#pssrPT').textContent=`${v} de ${PS.length}`;$('#pssrPP').textContent=`${p}%`;$('#pssrPB').style.width=`${p}%`;$('#dPssrPct').textContent=`${p}%`;$('#dPssrDone').textContent=v;$('#dPssrPend').textContent=PS.length-v;$('#dPssrTotal').textContent=PS.length}
+function uPlTot(){const rows=$$('.pl-row');$('#plPT').textContent=`0 de ${rows.length}`;$('#dPlTotal').textContent=rows.length;$('#dPlPend').textContent=rows.length}
+function uPl(){const rows=$$('.pl-row');let c=0;rows.forEach(r=>{if(plD[r.dataset.id]&&plD[r.dataset.id].estado==='CERRADO')c++});const t=rows.length,p=t?Math.round((c/t)*100):0;$('#plPT').textContent=`${c} de ${t}`;$('#plPP').textContent=`${p}%`;$('#plPB').style.width=`${p}%`;$('#dPlPct').textContent=`${p}%`;$('#dPlDone').textContent=c;$('#dPlPend').textContent=t-c;$('#dPlTotal').textContent=t}
+function uVlv(){let v=0;VV.forEach(i=>{if(vlD[i.id]&&vlD[i.id].cumple&&vlD[i.id].cumple!=='')v++});const p=Math.round((v/VV.length)*100);$('#vlvPT').textContent=`${v} de ${VV.length}`;$('#vlvPP').textContent=`${p}%`;$('#vlvPB').style.width=`${p}%`;$('#dVlvPct').textContent=`${p}%`;$('#dVlvDone').textContent=v;$('#dVlvPend').textContent=VV.length-v;$('#dVlvTotal').textContent=VV.length}
+function uAll(){uProg();uPssr();uPl();uVlv()}
 
-function addPlItem(dept){
-  const bar=document.querySelector(`.add-item-bar[data-dept="${dept}"]`);
-  const ubic=bar.querySelector('[data-add="ubicacion"]').value.trim();
-  const esp=bar.querySelector('[data-add="especialidad"]').value;
-  const desc=bar.querySelector('[data-add="descripcion"]').value.trim();
-  const tipo=bar.querySelector('[data-add="tipo"]').value;
-  const resp=bar.querySelector('[data-add="responsable"]').value.trim();
-  if(!desc){alert('Ingresa una descripción');return}
-  const num=plNextId[dept]++;
-  const id=`pl${dept[0]}${num}`;
-  const item={id,num,ubic:ubic||'—',esp,desc:desc.toUpperCase(),tipo,resp:resp||'—',dept};
-  $(`#pl-${dept}-body`).insertAdjacentHTML('beforeend',plRowHTML(item));
-  // Guardar en Firebase para que otros usuarios lo vean
-  if(firebaseReady&&db)db.ref(`punchlist_items/${CHECKLIST_ID}/${id}`).set(item);
-  bar.querySelectorAll('input[type="text"]').forEach(i=>i.value='');
-  updatePlTotal();
+// TIME
+function cT(o){let e=null,l=null;Object.values(o).forEach(d=>{if(d.updatedAt){const t=new Date(d.updatedAt);if(!e||t<e)e=t;if(!l||t>l)l=t}});if(!e||!l)return null;return Math.round((l-e)/60000)}
+function uTime(){const f=v=>v!==null?`${v} min`:'—';$('#tPssr').textContent=f(cT(psD));$('#tPl').textContent=f(cT(plD));$('#tVlv').textContent=f(cT(vlD));$('#tCl').textContent=f(cT(clD));$('#tAll').textContent=f(cT({...clD,...psD,...plD,...vlD}))}
+function uDash(){uAll();uTime();rAL()}
+
+// ACTIVITY
+function logA(id,user,action,type){const items=type==='cl'?CL:type==='ps'?PS:type==='vl'?VV:[...PP,...PE];const item=items.find(i=>i.id===id);const desc=item?(item.d||item.di):id;actH.unshift({text:`<strong>${user}</strong> ${action} <em>${desc}</em>`,time:ts()});if(actH.length>15)actH.pop();if(fbOk&&db)db.ref(`activity/${CID}`).set(actH);rAL()}
+function rAL(){const c=$('#activityLog');if(!actH.length){c.innerHTML='<div class="empty-state">Sin actividad registrada aún</div>';return}c.innerHTML=actH.map(a=>`<div class="activity-item"><div class="activity-dot"></div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div></div>`).join('')}
+
+// EXPORTS
+function xCL(){let c='\uFEFF#,Sección,Descripción,Obs,Completado,Usuario,Fecha/Hora\n';CL.forEach(i=>{const d=clD[i.id]||{};const s=i.s===1?'Válvulas':i.s===2?'Puesta en Marcha':'Producción';c+=`${i.n},"${s}","${i.d}","${(d.observation||'').replace(/"/g,'""')}",${d.completed?'Sí':'No'},"${d.technician||''}","${d.timestamp||''}"\n`});dl(c,'paso_a_paso.csv')}
+function xPS(){let c='\uFEFFN°,Verificación,Resp,Cumple,Obs,Usuario,Fecha/Hora\n';PS.forEach(i=>{const d=psD[i.id]||{};c+=`${i.n},"${i.d}","${i.r}","${d.cumple||''}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dl(c,'pssr.csv')}
+function xPL(){let c='\uFEFFId,Dept,Ubic,Esp,Descripción,Tipo,Resp,Estado,Obs,Usuario,Fecha/Hora\n';$$('.pl-row').forEach(r=>{const d=plD[r.dataset.id]||{};const td=r.querySelectorAll('td');c+=`${td[0].textContent.trim()},"${r.dataset.dept}","${td[1].textContent.trim()}","${td[2].textContent.trim()}","${td[3].textContent.trim()}","${td[4].textContent.trim()}","${td[5].textContent.trim()}","${d.estado||'ABIERTO'}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dl(c,'punchlist.csv')}
+function xVL(){let c='\uFEFFN°,Dispositivo,Posición,Confirma,Obs,Usuario,Fecha/Hora\n';VV.forEach(i=>{const d=vlD[i.id]||{};c+=`${i.n},"${i.di}","${i.p}","${d.cumple||''}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dl(c,'checklist_valvulas.csv')}
+function dl(csv,fn){const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=fn;a.click();URL.revokeObjectURL(u)}
+
+// FIREBASE
+const fbCfg={apiKey:"AIzaSyCTbQk8uKUaP7cmkmkMnxbfaIqTTWu-G3k",authDomain:"checklist-campo-fm.firebaseapp.com",databaseURL:"https://checklist-campo-fm-default-rtdb.firebaseio.com",projectId:"checklist-campo-fm",storageBucket:"checklist-campo-fm.firebasestorage.app",messagingSenderId:"907283891555",appId:"1:907283891555:web:43f0e510f500f8dd3fff56"};
+function loadFB(){const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js';s2.onload=()=>{try{firebase.initializeApp(fbCfg);db=firebase.database();fbOk=true;initFB();if(usr)regPres();monConn()}catch(e){console.warn('FB:',e)}};document.head.appendChild(s2)};s1.onerror=()=>console.warn('FB offline');document.head.appendChild(s1)}
+function initFB(){if(!db)return;
+  db.ref(`checklists/${CID}`).on('value',s=>{const v=s.val();if(!v)return;clD=v;CL.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="cl"]`);if(r&&v[i.id])lkCL(r,v[i.id])});uProg()});
+  db.ref(`pssr/${CID}`).on('value',s=>{const v=s.val();if(!v)return;psD=v;PS.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="pssr"]`);if(r&&v[i.id])lkPS(r,v[i.id])});uPssr()});
+  db.ref(`punchlist/${CID}`).on('value',s=>{const v=s.val();if(!v)return;plD=v;$$('.pl-row').forEach(r=>{const d=v[r.dataset.id];if(d)lkPL(r,d)});uPl()});
+  db.ref(`valvulas/${CID}`).on('value',s=>{const v=s.val();if(!v)return;vlD=v;VV.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="vlv"]`);if(r&&v[i.id])lkVL(r,v[i.id])});uVlv()});
+  db.ref(`pl_items/${CID}`).on('child_added',s=>{const i=s.val();if(!i||!i.id||document.querySelector(`tr[data-id="${i.id}"]`))return;const tb=$(`#pl-${i.dept}-body`);if(tb){tb.insertAdjacentHTML('beforeend',plH(i));uPlTot();const d=plD[i.id];if(d){const r=document.querySelector(`tr[data-id="${i.id}"]`);if(r)lkPL(r,d)}}});
+  db.ref(`pl_photos/${CID}`).on('child_added',s=>{const id=s.key,url=s.val();if(!url)return;const p=document.querySelector(`[data-preview="${id}"]`);if(p&&!p.querySelector('img'))p.innerHTML=`<img src="${url}" class="photo-thumb">`});
+  db.ref(`activity/${CID}`).on('value',s=>{const v=s.val();if(v&&Array.isArray(v)){actH=v;rAL()}});
+  db.ref(`presence/${CID}`).on('value',s=>{const v=s.val();const c=v?Object.keys(v).length:0;$('#onlineCount').textContent=c===1?'1 usuario':`${c} usuarios`});
 }
-
-// ========== FILTERS ==========
-function applyFilter(f){$$('.checklist-row').forEach(r=>{const d=checklistData[r.dataset.id];const ok=d&&d.completed;r.style.display=f==='all'?'':f==='completed'?(ok?'':'none'):(ok?'none':'')})}
-function applyPssrFilter(f){$$('.pssr-row').forEach(r=>{const d=pssrData[r.dataset.id];const ok=d&&d.cumple&&d.cumple!=='';r.style.display=f==='all'?'':f==='completed'?(ok?'':'none'):(ok?'none':'')})}
-function applyPlFilter(f){$$('.pl-row').forEach(r=>{const d=plData[r.dataset.id];const closed=d&&d.estado==='CERRADO';r.style.display=f==='all'?'':f==='completed'?(closed?'':'none'):(closed?'none':'')})}
-
-// ========== PROGRESS ==========
-function updateProgress(){let c=0;CHECKLIST_ITEMS.forEach(i=>{if(checklistData[i.id]&&checklistData[i.id].completed)c++});const p=Math.round((c/CL_TOTAL)*100);$('#progressText').textContent=`${c} de ${CL_TOTAL}`;$('#progressPct').textContent=`${p}%`;$('#progressBar').style.width=`${p}%`;$('#kpiTotal').textContent=CL_TOTAL;$('#kpiCompleted').textContent=c;$('#kpiPct').textContent=`${p}%`}
-function updatePssrProgress(){let v=0;PSSR_ITEMS.forEach(i=>{if(pssrData[i.id]&&pssrData[i.id].cumple&&pssrData[i.id].cumple!=='')v++});const p=Math.round((v/PSSR_TOTAL)*100);$('#pssrProgressText').textContent=`${v} de ${PSSR_TOTAL}`;$('#pssrProgressPct').textContent=`${p}%`;$('#pssrProgressBar').style.width=`${p}%`;$('#kpiPssr').textContent=`${p}%`}
-function updatePlTotal(){const rows=$$('.pl-row');$('#plProgressText').textContent=`0 de ${rows.length}`;$('#kpiPlTotal').textContent=rows.length}
-function updatePlProgress(){const rows=$$('.pl-row');let closed=0;rows.forEach(r=>{const d=plData[r.dataset.id];if(d&&d.estado==='CERRADO')closed++});const total=rows.length;const p=total?Math.round((closed/total)*100):0;$('#plProgressText').textContent=`${closed} de ${total}`;$('#plProgressPct').textContent=`${p}%`;$('#plProgressBar').style.width=`${p}%`;$('#kpiPlTotal').textContent=total;$('#kpiPlClosed').textContent=closed}
-
-// ========== TIME ==========
-function calcTime(obj){let e=null,l=null;Object.values(obj).forEach(d=>{if(d.updatedAt){const t=new Date(d.updatedAt);if(!e||t<e)e=t;if(!l||t>l)l=t}});if(!e||!l)return null;return Math.round((l-e)/60000)}
-function updateTimeCards(){const ct=calcTime(checklistData),pt=calcTime(pssrData),plt=calcTime(plData),tt=calcTime({...checklistData,...pssrData,...plData});$('#timeChecklist').textContent=ct!==null?`${ct} min`:'— min';$('#timePssr').textContent=pt!==null?`${pt} min`:'— min';$('#timePl').textContent=plt!==null?`${plt} min`:'— min';$('#timeTotal').textContent=tt!==null?`${tt} min`:'— min'}
-
-// ========== DASHBOARD ==========
-function renderDashSummary(){$('#dashSummary').innerHTML=CHECKLIST_ITEMS.map(i=>{const d=checklistData[i.id];return`<tr><td><span class="item-number">${i.num}</span></td><td>${i.desc}</td><td>${d&&d.completed?'✅ Completado':'⏳ Pendiente'}</td><td><span class="tech-name">${d?d.technician:'—'}</span></td><td><span class="time-stamp">${d?d.timestamp:'—'}</span></td></tr>`}).join('')}
-function renderDashPssr(){$('#dashPssrSummary').innerHTML=PSSR_ITEMS.map(i=>{const d=pssrData[i.id];const cl=d&&d.cumple?(d.cumple==='Si'?'✅ Sí':d.cumple==='No'?'❌ No':'➖ NA'):'⏳ Pendiente';return`<tr><td><span class="item-number">${i.num}</span></td><td>${i.desc}</td><td>${cl}</td><td><span class="tech-name">${d?d.technician:'—'}</span></td><td><span class="time-stamp">${d?d.timestamp:'—'}</span></td></tr>`}).join('')}
-
-// ========== ACTIVITY ==========
-function logActivity(id,user,action,type){const items=type==='cl'?CHECKLIST_ITEMS:type==='pssr'?PSSR_ITEMS:[...PL_PIPING,...PL_ELEC];const item=items.find(i=>i.id===id);activityHistory.unshift({text:`<strong>${user}</strong> ${action} <em>${item?item.desc:id}</em>`,time:getDateTimeStr()});if(activityHistory.length>15)activityHistory.pop();if(firebaseReady&&db)db.ref(`activity/${CHECKLIST_ID}`).set(activityHistory);renderActivityLog()}
-function renderActivityLog(){const c=$('#activityLog');if(!activityHistory.length){c.innerHTML='<div class="empty-state">Sin actividad registrada aún</div>';return}c.innerHTML=activityHistory.map(a=>`<div class="activity-item"><div class="activity-dot"></div><div class="activity-text">${a.text}</div><div class="activity-time">${a.time}</div></div>`).join('')}
-
-// ========== EXPORTS ==========
-function exportExcel(){const B='\uFEFF';let csv=B+'#,Sección,Descripción,Observaciones,Completado,Usuario,Fecha/Hora\n';CHECKLIST_ITEMS.forEach(i=>{const d=checklistData[i.id]||{};const s=i.section===1?'Válvulas':i.section===2?'Puesta en Marcha':'Producción';csv+=`${i.num},"${s}","${i.desc}","${(d.observation||'').replace(/"/g,'""')}",${d.completed?'Sí':'No'},"${d.technician||''}","${d.timestamp||''}"\n`});dlCSV(csv,`checklist_${new Date().toISOString().slice(0,10)}.csv`)}
-function exportPssrExcel(){const B='\uFEFF';let csv=B+'N°,Verificación,Responsable,Cumple,Observaciones,Usuario,Fecha/Hora\n';PSSR_ITEMS.forEach(i=>{const d=pssrData[i.id]||{};csv+=`${i.num},"${i.desc}","${i.resp}","${d.cumple||''}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dlCSV(csv,`pssr_${new Date().toISOString().slice(0,10)}.csv`)}
-function exportPlExcel(){const B='\uFEFF';let csv=B+'Id,Departamento,Ubicación,Especialidad,Descripción,Tipo,Responsable,Estado,Observación,Usuario,Fecha/Hora\n';$$('.pl-row').forEach(r=>{const id=r.dataset.id;const d=plData[id]||{};const cells=r.querySelectorAll('td');csv+=`${cells[0].textContent.trim()},"${r.dataset.dept}","${cells[1].textContent.trim()}","${cells[2].textContent.trim()}","${cells[3].textContent.trim()}","${cells[4].textContent.trim()}","${cells[5].textContent.trim()}","${d.estado||'ABIERTO'}","${(d.observation||'').replace(/"/g,'""')}","${d.technician||''}","${d.timestamp||''}"\n`});dlCSV(csv,`punchlist_${new Date().toISOString().slice(0,10)}.csv`)}
-function dlCSV(csv,fn){const b=new Blob([csv],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=fn;a.click();URL.revokeObjectURL(u)}
-
-// ========== FIREBASE ==========
-const firebaseConfig={
-  apiKey:"AIzaSyCTbQk8uKUaP7cmkmkMnxbfaIqTTWu-G3k",
-  authDomain:"checklist-campo-fm.firebaseapp.com",
-  databaseURL:"https://checklist-campo-fm-default-rtdb.firebaseio.com",
-  projectId:"checklist-campo-fm",
-  storageBucket:"checklist-campo-fm.firebasestorage.app",
-  messagingSenderId:"907283891555",
-  appId:"1:907283891555:web:43f0e510f500f8dd3fff56"
-};
-function loadFirebase(){const s1=document.createElement('script');s1.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';s1.onload=()=>{const s2=document.createElement('script');s2.src='https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js';s2.onload=()=>{try{firebase.initializeApp(firebaseConfig);db=firebase.database();firebaseReady=true;initFirebaseListeners();if(currentUser)registerPresence();monitorConnection()}catch(e){console.warn('Firebase init error:',e)}};document.head.appendChild(s2)};s1.onerror=()=>console.warn('Firebase no disponible');document.head.appendChild(s1)}
-
-function initFirebaseListeners(){if(!db)return;
-  db.ref(`checklists/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(!v)return;checklistData=v;CHECKLIST_ITEMS.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="cl"]`);if(r&&v[i.id])lockRow(r,v[i.id])});updateProgress()});
-  db.ref(`pssr/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(!v)return;pssrData=v;PSSR_ITEMS.forEach(i=>{const r=document.querySelector(`tr[data-id="${i.id}"][data-type="pssr"]`);if(r&&v[i.id])lockPssrRow(r,v[i.id])});updatePssrProgress()});
-  db.ref(`punchlist/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(!v)return;plData=v;$$('.pl-row').forEach(r=>{const d=v[r.dataset.id];if(d)lockPlRow(r,d)});updatePlProgress()});
-  // Nuevos ítems de PL agregados por otros usuarios
-  db.ref(`punchlist_items/${CHECKLIST_ID}`).on('child_added',s=>{
-    const item=s.val();if(!item||!item.id)return;
-    const existing=document.querySelector(`tr[data-id="${item.id}"]`);
-    if(existing)return;// ya existe localmente
-    const dept=item.dept;
-    const tbody=$(`#pl-${dept}-body`);
-    if(tbody){tbody.insertAdjacentHTML('beforeend',plRowHTML(item));updatePlTotal();
-      // Si tiene estado guardado, bloquearlo
-      const d=plData[item.id];if(d){const r=document.querySelector(`tr[data-id="${item.id}"]`);if(r)lockPlRow(r,d)}
-    }
-  });
-  // Fotos compartidas
-  db.ref(`punchlist_photos/${CHECKLIST_ID}`).on('child_added',s=>{
-    const id=s.key;const dataUrl=s.val();if(!dataUrl)return;
-    const prev=document.querySelector(`[data-preview="${id}"]`);
-    if(prev&&!prev.querySelector('img')){prev.innerHTML=`<img src="${dataUrl}" class="photo-thumb" title="Clic para ampliar">`}
-  });
-  db.ref(`activity/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();if(v&&Array.isArray(v)){activityHistory=v;renderActivityLog()}});
-  db.ref(`presence/${CHECKLIST_ID}`).on('value',s=>{const v=s.val();const c=v?Object.keys(v).length:0;$('#onlineCount').textContent=c===1?'1 usuario conectado':`${c} usuarios conectados`});
-}
-function registerPresence(){if(!db||!currentUser)return;const k=currentUser.replace(/[.#$/\[\]]/g,'_');const r=db.ref(`presence/${CHECKLIST_ID}/${k}`);r.set({name:currentUser,joinedAt:new Date().toISOString()});r.onDisconnect().remove()}
-function monitorConnection(){if(!db)return;db.ref('.info/connected').on('value',s=>{const b=$('#offlineBar');s.val()===true?b.classList.remove('show'):b.classList.add('show')})}
-
-// ========== INIT ==========
-document.addEventListener('DOMContentLoaded',()=>{initUI();updateProgress();updatePssrProgress();if(currentUser)setUser(currentUser);else showNameModal();loadFirebase()});
+function regPres(){if(!db||!usr)return;const k=usr.replace(/[.#$/\[\]]/g,'_');const r=db.ref(`presence/${CID}/${k}`);r.set({name:usr,joinedAt:new Date().toISOString()});r.onDisconnect().remove()}
+function monConn(){if(!db)return;db.ref('.info/connected').on('value',s=>{const b=$('#offlineBar');s.val()===true?b.classList.remove('show'):b.classList.add('show')})}
+document.addEventListener('DOMContentLoaded',()=>{initUI();uAll();if(usr)setU(usr);else showNM();loadFB()});
 </script>
 </body>
 </html>
