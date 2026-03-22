@@ -177,8 +177,8 @@
   <div class="modal-card">
     <h2>👷 Identificación</h2>
     <p>Ingresa tu nombre para registrar las acciones</p>
-    <input type="text" id="modal-name-input" placeholder="Tu nombre completo" maxlength="50">
-    <button onclick="saveUserName()">Ingresar al checklist</button>
+    <input type="text" id="modal-name-input" placeholder="Tu nombre completo" maxlength="50" onkeydown="if(event.key==='Enter') saveUserName()">
+    <button id="modal-btn" onclick="saveUserName()">Ingresar al checklist</button>
   </div>
 </div>
 
@@ -601,11 +601,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function saveUserName() {
-  const val = document.getElementById("modal-name-input").value.trim();
-  if (!val) return;
+  const input = document.getElementById("modal-name-input");
+  const val = (input ? input.value : "").trim();
+  if (!val) { if(input) input.style.border="2px solid var(--danger)"; return; }
   userName = val;
   localStorage.setItem("checklist_user_name", userName);
-  document.getElementById("modal-overlay").style.display = "none";
+  const overlay = document.getElementById("modal-overlay");
+  if (overlay) overlay.style.display = "none";
   applyUserName();
   initApp();
 }
